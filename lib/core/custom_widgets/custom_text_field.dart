@@ -3,17 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// GetX Controller for CustomTextField
 class CustomTextFieldController extends GetxController {
   final RxBool isDropdownOpen = false.obs;
 
-  void toggleDropdown() {
-    isDropdownOpen.value = !isDropdownOpen.value;
-  }
-
-  void closeDropdown() {
-    isDropdownOpen.value = false;
-  }
+  void toggleDropdown() => isDropdownOpen.toggle();
+  void closeDropdown() => isDropdownOpen.value = false;
 }
 
 class CustomTextField extends StatelessWidget {
@@ -37,7 +31,7 @@ class CustomTextField extends StatelessWidget {
     this.borderSide,
     this.readOnly = false,
     this.onTap,
-    this.maxLines,
+    this.maxLines = 1,
     this.minLines,
     this.height,
     this.isDropdown = false,
@@ -45,6 +39,7 @@ class CustomTextField extends StatelessWidget {
     this.selectedDropdownValue,
     this.onDropdownChanged,
     this.controllerTag = 'default',
+    this.keyboardType,
   });
 
   final String? hintText;
@@ -73,14 +68,13 @@ class CustomTextField extends StatelessWidget {
   final String? selectedDropdownValue;
   final void Function(String?)? onDropdownChanged;
   final String controllerTag;
+  final TextInputType? keyboardType; // ✅ FIXED TYPE
 
   @override
   Widget build(BuildContext context) {
-    final CustomTextFieldController controller = Get.put(
-      CustomTextFieldController(),
-      tag: controllerTag,
-    );
+    final controller = Get.put(CustomTextFieldController(), tag: controllerTag);
 
+    /// ✅ Update dropdown text from outside
     if (isDropdown && selectedDropdownValue != null) {
       textEditingController?.text = selectedDropdownValue!;
     }
@@ -93,221 +87,121 @@ class CustomTextField extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// 🔹 Label
           Text(
             titleText,
-            style: context.textTheme.labelSmall!.copyWith(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+            style: GoogleFonts.dmSans(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
             ),
           ),
-          SizedBox(height: 8),
-          SingleChildScrollView(
-            // Wrap the content in SingleChildScrollView
-            child: SizedBox(
-              height: isDropdown && isOpen
-                  ? (height ?? 40.h) +
-                        (dropdownItems?.length ?? 0) * 25.h +
-                        10.h
-                  : height ?? 48.h,
-              width: width ?? screenWidth * 0.9,
-              child: isDropdown
-                  ? Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        TextFormField(
-                          controller: textEditingController,
-                          obscureText: obscureText,
-                          maxLines: maxLines ?? 1,
-                          minLines: minLines,
-                          validator: validator,
-                          readOnly: true,
-                          onTap: () {
-                            onTap?.call();
-                            controller.toggleDropdown();
-                          },
-                          style: GoogleFonts.dmSans(
-                            fontSize: fontSize ?? 16.sp,
-                            fontWeight: fontWeight ?? FontWeight.w400,
-                            height: lineHeight ?? 24.h / 16.h,
-                            color: textColor ?? Colors.black,
-                          ),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 5.h,
-                              horizontal: 10.w,
-                            ),
-                            hintText: hintText,
-                            hintStyle: GoogleFonts.dmSans(
-                              fontSize: fontSize ?? 14.sp,
-                              fontWeight: fontWeight ?? FontWeight.w300,
-                              height: lineHeight ?? 24.h / 16.h,
-                              color: hintTextColor ?? Colors.grey,
-                            ),
-                            prefixIcon: prefixIconPath != null
-                                ? Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w,
-                                    ),
-                                    child: Image.asset(
-                                      prefixIconPath!,
-                                      width: 14.w,
-                                      height: 14.h,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  )
-                                : null,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                              borderSide: borderSide ?? BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                              borderSide: borderSide ?? BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                              borderSide: borderSide ?? BorderSide.none,
-                            ),
-                            suffixIcon: suffixIcon,
-                            filled: true,
-                            fillColor: fillColor ?? const Color(0xFF382D4A),
-                          ),
-                        ),
-                        if (isOpen && dropdownItems != null)
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                final screenHeight = MediaQuery.of(
-                                  context,
-                                ).size.height;
-                                final renderBox =
-                                    context.findRenderObject() as RenderBox?;
-                                final currentY =
-                                    renderBox?.localToGlobal(Offset.zero).dy ??
-                                    0;
-                                final availableHeight =
-                                    screenHeight - currentY - 40.h;
+          SizedBox(height: 8.h),
 
-                                return ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxHeight: availableHeight > 150.h
-                                        ? 150.h
-                                        : availableHeight,
-                                  ),
-                                  child: Material(
-                                    elevation: 4,
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    child: SingleChildScrollView(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: fillColor ?? Colors.white,
-                                          border: Border.all(
-                                            color:
-                                                borderSide?.color ??
-                                                Colors.grey,
-                                            width: borderSide?.width ?? 1,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            10.r,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: dropdownItems!.map((item) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                textEditingController?.text =
-                                                    item;
-                                                onDropdownChanged?.call(item);
-                                                controller.closeDropdown();
-                                              },
-                                              child: Container(
-                                                width: double.infinity,
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 10.h,
-                                                  horizontal: 10.w,
-                                                ),
-                                                child: Text(
-                                                  item,
-                                                  style: GoogleFonts.dmSans(
-                                                    fontSize: fontSize ?? 14.sp,
-                                                    fontWeight:
-                                                        fontWeight ??
-                                                        FontWeight.w300,
-                                                    color:
-                                                        textColor ??
-                                                        Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+          /// 🔹 Text Field + Dropdown Overlay Support
+          Stack(
+            children: [
+              SizedBox(
+                width: width ?? screenWidth,
+                child: TextFormField(
+                  controller: textEditingController,
+                  obscureText: obscureText,
+                  readOnly: isDropdown ? true : readOnly,
+                  onTap: () {
+                    if (isDropdown) controller.toggleDropdown();
+                    onTap?.call();
+                  },
+                  keyboardType: keyboardType,
+                  validator: validator,
+                  style: GoogleFonts.dmSans(
+                    fontSize: fontSize ?? 16.sp,
+                    fontWeight: fontWeight ?? FontWeight.w400,
+                    color: textColor ?? Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    hintStyle: GoogleFonts.dmSans(
+                      fontSize: fontSize ?? 14.sp,
+                      fontWeight: FontWeight.w300,
+                      color: hintTextColor ?? Colors.grey,
+                    ),
+                    suffixIcon: isDropdown
+                        ? Icon(
+                      isOpen
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: Colors.grey,
+                    )
+                        : suffixIcon,
+                    prefixIcon: prefixIconPath != null
+                        ? Padding(
+                      padding: EdgeInsets.only(left: 8.w, right: 5.w),
+                      child: Image.asset(prefixIconPath!,
+                          width: 20.w, height: 20.h),
+                    )
+                        : null,
+                    filled: true,
+                    fillColor: fillColor ?? Colors.white,
+                    contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12.w, vertical: 12.h),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                      borderSide: borderSide ?? BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+
+              /// 🔹 Dropdown list
+              if (isDropdown && isOpen && dropdownItems != null)
+                Positioned(
+                  top: height ?? 55.h,
+                  width: width ?? screenWidth,
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxHeight: 160.h, // ✅ Scroll limit
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.r),
+                      border: Border.all(color: Colors.grey),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 6,
+                          offset: Offset(0, 4),
+                          color: Colors.black.withOpacity(0.1),
+                        )
+                      ],
+                    ),
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      children: dropdownItems!
+                          .map(
+                            (item) => InkWell(
+                          onTap: () {
+                            textEditingController?.text = item;
+                            onDropdownChanged?.call(item);
+                            controller.closeDropdown();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12.h, horizontal: 10.w),
+                            child: Text(
+                              item,
+                              style: GoogleFonts.dmSans(
+                                fontSize: 14.sp,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
-                      ],
-                    )
-                  : TextFormField(
-                      controller: textEditingController,
-                      obscureText: obscureText,
-                      maxLines: maxLines ?? 1,
-                      minLines: minLines,
-                      validator: validator,
-                      readOnly: readOnly,
-                      onTap: onTap,
-                      style: GoogleFonts.dmSans(
-                        fontSize: fontSize ?? 16.sp,
-                        fontWeight: fontWeight ?? FontWeight.w400,
-                        height: lineHeight ?? 24.h / 16.h,
-                        color: textColor ?? Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 5.h,
-                          horizontal: 10.w,
                         ),
-                        hintText: hintText,
-                        hintStyle: GoogleFonts.dmSans(
-                          fontSize: fontSize ?? 14.sp,
-                          fontWeight: fontWeight ?? FontWeight.w300,
-                          height: lineHeight ?? 24.h / 16.h,
-                          color: hintTextColor ?? Colors.white,
-                        ),
-                        prefixIcon: prefixIconPath != null
-                            ? Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                child: Image.asset(
-                                  prefixIconPath!,
-                                  width: 20.w,
-                                  height: 20.h,
-                                  fit: BoxFit.contain,
-                                ),
-                              )
-                            : null,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                          borderSide: borderSide ?? BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                          borderSide: borderSide ?? BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                          borderSide: borderSide ?? BorderSide.none,
-                        ),
-                        suffixIcon: suffixIcon,
-                        filled: true,
-                        fillColor: fillColor ?? const Color(0xFFFFFFFF),
-                      ),
+                      )
+                          .toList(),
                     ),
-            ),
+                  ),
+                ),
+            ],
           ),
         ],
       );

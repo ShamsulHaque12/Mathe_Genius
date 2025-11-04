@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mathe_genius/auth/sign_up_screen.dart';
+import 'package:mathe_genius/auth/signup_screen/views/sign_up_screen.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
+
+import '../auth/login_screen/views/log_in_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -12,33 +14,35 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 50.h,),
             Text(
               'Welcome to Mathe Genius!',
               style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Lottie.asset('assets/lottie/children.json'),
           ],
         ),
       ),
       bottomSheet: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Color.fromARGB(255, 198, 202, 209),
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
         ),
-        height: 150.h,
+        height: 200.h,
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomButtonGradient(
               text: "Log In",
-              onPressed: () {},
+              onPressed: () {
+                Get.to(()=>LogInScreen());
+              },
               width: 200.w,
               gradientColors: [
                 Colors.blue,
