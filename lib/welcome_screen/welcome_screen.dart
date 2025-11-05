@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mathe_genius/auth/signup_screen/views/sign_up_screen.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
+import 'package:mathe_genius/navigation_screens/views/app_navigation_bar.dart';
 
 import '../auth/login_screen/views/log_in_screen.dart';
 
@@ -39,65 +40,65 @@ class WelcomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomButtonGradient(
-              text: "Log In",
+              text: "Home Screen",
               onPressed: () {
-                Get.to(()=>LogInScreen());
+                Get.to(()=>AppNavigationBar());
               },
               width: 200.w,
               gradientColors: [
                 Colors.blue,
-                const Color.fromARGB(255, 31, 110, 61),
+                Color.fromARGB(255, 31, 110, 61),
               ],
             ),
             SizedBox(height: 10.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account? ",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.to(() => SignUpScreen());
-                  },
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 223, 8, 26),
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 5.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.facebook,
-                    color: Colors.blue,
-                    size: 50,
-                  ),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.g_mobiledata,
-                    color: Colors.red,
-                    size: 50,
-                  ),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.apple, color: Colors.black, size: 50),
-                  onPressed: () {},
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text(
+            //       "Don't have an account? ",
+            //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            //     ),
+            //     GestureDetector(
+            //       onTap: () {
+            //         Get.to(() => SignUpScreen());
+            //       },
+            //       child: const Text(
+            //         "Sign Up",
+            //         style: TextStyle(
+            //           color: Color.fromARGB(255, 223, 8, 26),
+            //           fontWeight: FontWeight.bold,
+            //           decoration: TextDecoration.underline,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // SizedBox(height: 5.h),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     IconButton(
+            //       icon: const Icon(
+            //         Icons.facebook,
+            //         color: Colors.blue,
+            //         size: 50,
+            //       ),
+            //       onPressed: () {},
+            //     ),
+            //     IconButton(
+            //       icon: const Icon(
+            //         Icons.g_mobiledata,
+            //         color: Colors.red,
+            //         size: 50,
+            //       ),
+            //       onPressed: () {},
+            //     ),
+            //     IconButton(
+            //       icon: const Icon(Icons.apple, color: Colors.black, size: 50),
+            //       onPressed: () {},
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),

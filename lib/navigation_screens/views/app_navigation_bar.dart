@@ -6,7 +6,7 @@ import 'package:mathe_genius/navigation_screens/controller/navigation_controller
 
 import '../../features/favourite_screens/views/favourite_screens_view.dart';
 import '../../features/home_screens/views/home_screens_view.dart';
-import '../../features/progress_screens/views/progress_screens_view.dart';
+import '../../features/setting_screens/views/setting_screen_view.dart';
 
 class AppNavigationBar extends StatelessWidget {
   final NavigationController controller = Get.put(NavigationController());
@@ -17,7 +17,7 @@ class AppNavigationBar extends StatelessWidget {
     final List<Widget> screens = [
       HomeScreensView(),
       FavouriteScreensView(),
-      ProgressScreensView(),
+      SettingScreenView(),
     ];
 
     return SafeArea(
@@ -43,7 +43,7 @@ class AppNavigationBar extends StatelessWidget {
             children: [
               bottomNavItem(Icons.home, 'Home', 0),
               bottomNavItem(Icons.favorite_outlined, 'Favourite', 1),
-              bottomNavItem(Icons.bar_chart_outlined, 'Progress', 2),
+              bottomNavItem(Icons.settings, 'Setting', 2),
             ],
           ),
         ),
