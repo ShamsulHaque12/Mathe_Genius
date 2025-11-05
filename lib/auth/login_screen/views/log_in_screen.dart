@@ -5,9 +5,10 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mathe_genius/auth/login_screen/controller/log_in_controller.dart';
-import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_text_field.dart';
+import '../../../core/custom_widgets/custom_button_gradient.dart';
 import '../../../core/custom_widgets/leading_button_appbar.dart';
+import '../../../navigation_screens/views/app_navigation_bar.dart';
 
 class LogInScreen extends StatelessWidget {
   final LogInController controller = Get.put(LogInController());
@@ -46,9 +47,13 @@ class LogInScreen extends StatelessWidget {
             SizedBox(height: 15.h),
             CustomButtonGradient(
               text: "Log In",
-              onPressed: () {},
+              onPressed: () {
+                Get.to(() => AppNavigationBar());
+              },
               gradientColors: [Colors.blue, Color.fromARGB(255, 31, 110, 61)],
             ),
+
+
           ],
         ),
       ),
