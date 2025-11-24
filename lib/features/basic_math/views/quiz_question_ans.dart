@@ -1,30 +1,81 @@
+// quiz_question_ans.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
 import '../../../core/custom_widgets/leading_button_appbar.dart';
 import '../controller/question_ans_controller.dart';
 
-class QuizQuestionAns extends StatelessWidget {
-  final QuestionAnsController controller = Get.put(QuestionAnsController());
+class QuizQuestionAns extends StatefulWidget {
   final String operation;
+  const QuizQuestionAns({super.key, required this.operation});
 
-  QuizQuestionAns({super.key, required this.operation});
+  @override
+  State<QuizQuestionAns> createState() => _QuizQuestionAnsState();
+}
 
+class _QuizQuestionAnsState extends State<QuizQuestionAns> {
+  late QuestionAnsController controller;
   final AudioPlayer audioPlayer = AudioPlayer();
 
   @override
-  Widget build(BuildContext context) {
-    controller.generateQuestions(operation: operation);
+  void initState() {
+    super.initState();
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.h),
-        child: SafeArea(child: LeadingButtonAppbar(text: "Quiz: $operation")),
-      ),
-      body: Obx(
-            () {
+    // Safe controller initialization
+    if (Get.isRegistered<QuestionAnsController>()) {
+      Get.delete<QuestionAnsController>(force: true);
+    }
+
+    controller = Get.put(QuestionAnsController());
+    controller.generateQuestions(operation: widget.operation);
+  }
+
+  @override
+  void dispose() {
+    if (Get.isRegistered<QuestionAnsController>()) {
+      Get.delete<QuestionAnsController>();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (!controller.showFeedback.value &&
+            controller.currentQuestionIndex.value < controller.totalQuestions) {
+          final result = await showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text("Quit Quiz?"),
+              content: Text("Your current progress will be lost."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: Text("Quit"),
+                ),
+              ],
+            ),
+          );
+          return result ?? false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60.h),
+          child: SafeArea(
+            child: LeadingButtonAppbar(text: "Quiz: ${widget.operation}"),
+          ),
+        ),
+        body: Obx(() {
           if (controller.currentQuestionIndex.value >=
               controller.totalQuestions) {
             Future.delayed(Duration.zero, () => _showResultPopup(context));
@@ -32,7 +83,7 @@ class QuizQuestionAns extends StatelessWidget {
           }
 
           final question =
-          controller.questions[controller.currentQuestionIndex.value];
+              controller.questions[controller.currentQuestionIndex.value];
 
           return Padding(
             padding: EdgeInsets.all(16.w),
@@ -42,31 +93,27 @@ class QuizQuestionAns extends StatelessWidget {
                 SizedBox(height: 20.h),
                 Text(
                   "Question ${controller.currentQuestionIndex.value + 1} / ${controller.totalQuestions}",
-                  style:
-                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 20.h),
 
-                /// Question Card Slide-In Animation
-                TweenAnimationBuilder(
-                  tween: Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)),
-                  duration: Duration(milliseconds: 400),
-                  builder: (context, Offset offset, child) {
-                    return Transform.translate(
-                        offset: Offset(offset.dx * 300, 0), child: child);
-                  },
-                  child: Card(
-                    elevation: 4,
-                    color: Colors.blue.shade50,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.r)),
-                    child: Padding(
-                      padding: EdgeInsets.all(16.w),
-                      child: Text(
-                        question['question'],
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 28.sp, fontWeight: FontWeight.bold),
+                Card(
+                  elevation: 4,
+                  color: Colors.blue.shade50,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: Text(
+                      question['question'],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -74,7 +121,6 @@ class QuizQuestionAns extends StatelessWidget {
 
                 SizedBox(height: 30.h),
 
-                /// Options
                 ...question['options'].map<Widget>((opt) {
                   bool isSelected = controller.selectedAnswer.value == opt;
                   bool isCorrectAnswer = opt == question['answer'];
@@ -85,7 +131,9 @@ class QuizQuestionAns extends StatelessWidget {
                       color = Colors.green;
                     } else if (isSelected && !controller.isCorrect.value) {
                       color = Colors.red;
-                    } else if (!isSelected && !controller.isCorrect.value && isCorrectAnswer) {
+                    } else if (!isSelected &&
+                        !controller.isCorrect.value &&
+                        isCorrectAnswer) {
                       color = Colors.green.withOpacity(0.6);
                     }
                   }
@@ -93,41 +141,30 @@ class QuizQuestionAns extends StatelessWidget {
                   return GestureDetector(
                     onTap: controller.showFeedback.value
                         ? null
-                        : () => controller.selectAnswer(opt),
-                    child: TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 0.95, end: 1.0),
-                      duration: Duration(milliseconds: 200),
-                      builder: (context, double scale, child) {
-                        return Transform.scale(
-                            scale: scale, child: child);
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        margin: EdgeInsets.symmetric(vertical: 8.h),
-                        padding: EdgeInsets.symmetric(vertical: 14.h),
-                        decoration: BoxDecoration(
-                          color: color,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                              color: Colors.blueAccent, width: 1.5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 4,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
+                        : () {
+                            controller.selectAnswer(opt);
+                            playSound(controller.isCorrect.value);
+                          },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 8.h),
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: Colors.blueAccent,
+                          width: 1.5,
                         ),
-                        child: Center(
-                          child: Text(
-                            opt,
-                            style: TextStyle(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.bold,
-                              color: color.computeLuminance() > 0.5
-                                  ? Colors.black87
-                                  : Colors.white,
-                            ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          opt,
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                            color: color.computeLuminance() > 0.5
+                                ? Colors.black87
+                                : Colors.white,
                           ),
                         ),
                       ),
@@ -138,7 +175,9 @@ class QuizQuestionAns extends StatelessWidget {
                 Spacer(),
 
                 if (controller.showFeedback.value)
-                  ElevatedButton(
+                  CustomButtonGradient(
+                    height: 40.h,
+                    text: (controller.isLastQuestion ? "Finish" : "Next"),
                     onPressed: () {
                       if (controller.isLastQuestion) {
                         _showResultPopup(context);
@@ -146,19 +185,31 @@ class QuizQuestionAns extends StatelessWidget {
                         controller.nextQuestion();
                       }
                     },
-                    child: Text(controller.isLastQuestion ? "Finish" : "Next"),
+                    backgroundColor: Colors.blueAccent,
                   ),
+
+                // ElevatedButton(
+                //   onPressed: () {
+                //     if (controller.isLastQuestion) {
+                //       _showResultPopup(context);
+                //     } else {
+                //       controller.nextQuestion();
+                //     }
+                //   },
+                //   child: Text(controller.isLastQuestion ? "Finish" : "Next"),
+                // ),
               ],
             ),
           );
-        },
+        }),
       ),
     );
   }
 
   void playSound(bool correct) async {
-    String path =
-    correct ? "assets/lottie/correct.mp3" : "assets/lottie/wrong.mp3";
+    String path = correct
+        ? "assets/lottie/correct.mp3"
+        : "assets/lottie/wrong.mp3";
     await audioPlayer.play(AssetSource(path));
   }
 
@@ -170,7 +221,8 @@ class QuizQuestionAns extends StatelessWidget {
         return AlertDialog(
           backgroundColor: Colors.yellow.shade50,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.r)),
+            borderRadius: BorderRadius.circular(20.r),
+          ),
           title: Text(
             "Quiz Finished!",
             style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
@@ -179,28 +231,38 @@ class QuizQuestionAns extends StatelessWidget {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Lottie.asset("assets/lottie/confetti.json", height: 100.h),
+              Lottie.asset("assets/lottie/winer.json", height: 100.h),
               SizedBox(height: 10.h),
               Text(
                 "Your Score: ${controller.score.value} / ${controller.totalQuestions}",
                 style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue),
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
           ),
           actions: [
             Center(
-              child: ElevatedButton(
+              child: CustomButtonGradient(
+                text: "Ok",
                 onPressed: () {
                   Get.back(); // close popup
                   Get.back(); // go to previous screen
                 },
-                child: Text("OK"),
+                backgroundColor: Colors.blueAccent,
               ),
-            )
+
+              // child: ElevatedButton(
+              //   onPressed: () {
+              //     Get.back(); // close popup
+              //     Get.back(); // go to previous screen
+              //   },
+              //   child: Text("OK"),
+              // ),
+            ),
           ],
         );
       },

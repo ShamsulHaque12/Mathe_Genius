@@ -1,11 +1,12 @@
+// basic_math_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mathe_genius/features/basic_math/views/quiz_question_ans.dart';
 
 import '../../../core/custom_widgets/leading_button_appbar.dart';
+import '../controller/question_ans_controller.dart';
 
 class BasicMathScreen extends StatelessWidget {
   const BasicMathScreen({super.key});
@@ -72,7 +73,18 @@ class BasicMathScreen extends StatelessWidget {
                   },
                   child: GestureDetector(
                     onTap: () {
-                      Get.to(() => QuizQuestionAns(operation: item['symbol']));
+                      // Map symbol to operation code for controller
+                      String op = item['symbol'];
+                      if (op == '×') op = '*';
+                      if (op == '÷') op = '/';
+
+                      // Delete old controller safely
+                      if (Get.isRegistered<QuestionAnsController>()) {
+                        Get.delete<QuestionAnsController>(force: true);
+                      }
+
+                      // Navigate to quiz screen
+                      Get.to(() => QuizQuestionAns(operation: op));
                     },
                     child: Container(
                       decoration: BoxDecoration(

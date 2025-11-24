@@ -14,12 +14,12 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     this.hintText,
-    required this.titleText,
+    this.titleText,
     this.textEditingController,
     this.fontSize,
     this.fontWeight,
     this.lineHeight,
-    this.bacgroundColor = const Color(0xFFE9EBF0),
+    this.backgroundColor = const Color(0xFFE9EBF0),
     this.validator,
     this.obscureText = false,
     this.suffixIcon,
@@ -43,12 +43,12 @@ class CustomTextField extends StatelessWidget {
   });
 
   final String? hintText;
-  final String titleText;
+  final String? titleText;
   final double? fontSize;
   final FontWeight? fontWeight;
   final double? lineHeight;
   final TextEditingController? textEditingController;
-  final Color? bacgroundColor;
+  final Color? backgroundColor;
   final String? Function(String?)? validator;
   final bool obscureText;
   final Widget? suffixIcon;
@@ -68,15 +68,19 @@ class CustomTextField extends StatelessWidget {
   final String? selectedDropdownValue;
   final void Function(String?)? onDropdownChanged;
   final String controllerTag;
-  final TextInputType? keyboardType; // ✅ FIXED TYPE
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CustomTextFieldController(), tag: controllerTag);
+    // Controller create with tag
+    final controller =
+    Get.put(CustomTextFieldController(), tag: controllerTag);
 
-    /// ✅ Update dropdown text from outside
+    // Set initial dropdown value if provided
     if (isDropdown && selectedDropdownValue != null) {
-      textEditingController?.text = selectedDropdownValue!;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        textEditingController?.text = selectedDropdownValue!;
+      });
     }
 
     final screenWidth = MediaQuery.of(context).size.width;
@@ -87,18 +91,19 @@ class CustomTextField extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 🔹 Label
-          Text(
-            titleText,
-            style: GoogleFonts.dmSans(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
+          // Label
+          if (titleText != null)
+            Text(
+              titleText!,
+              style: GoogleFonts.dmSans(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
             ),
-          ),
-          SizedBox(height: 8.h),
+          if (titleText != null) SizedBox(height: 8.h),
 
-          /// 🔹 Text Field + Dropdown Overlay Support
+          // TextField with optional dropdown
           Stack(
             children: [
               SizedBox(
@@ -113,6 +118,8 @@ class CustomTextField extends StatelessWidget {
                   },
                   keyboardType: keyboardType,
                   validator: validator,
+                  maxLines: maxLines,
+                  minLines: minLines,
                   style: GoogleFonts.dmSans(
                     fontSize: fontSize ?? 16.sp,
                     fontWeight: fontWeight ?? FontWeight.w400,
@@ -142,24 +149,25 @@ class CustomTextField extends StatelessWidget {
                         : null,
                     filled: true,
                     fillColor: fillColor ?? Colors.white,
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.w, vertical: 12.h),
+                    contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
-                      borderSide: borderSide ?? BorderSide(color: Colors.grey),
+                      borderSide:
+                      borderSide ?? BorderSide(color: Colors.grey),
                     ),
                   ),
                 ),
               ),
 
-              /// 🔹 Dropdown list
+              // Dropdown Overlay
               if (isDropdown && isOpen && dropdownItems != null)
                 Positioned(
                   top: height ?? 55.h,
                   width: width ?? screenWidth,
                   child: Container(
                     constraints: BoxConstraints(
-                      maxHeight: 160.h, // ✅ Scroll limit
+                      maxHeight: 160.h,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -170,7 +178,7 @@ class CustomTextField extends StatelessWidget {
                           blurRadius: 6,
                           offset: Offset(0, 4),
                           color: Colors.black.withOpacity(0.1),
-                        )
+                        ),
                       ],
                     ),
                     child: ListView(

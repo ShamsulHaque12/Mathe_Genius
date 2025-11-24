@@ -16,14 +16,16 @@ class QuestionAnsController extends GetxController {
     super.onInit();
   }
 
-  void generateQuestions({String operation = '+'}) {
+  void generateQuestions({required String operation}) {
     final random = Random();
     questions.clear();
+
     for (int i = 0; i < totalQuestions; i++) {
       int a = random.nextInt(20) + 1;
       int b = random.nextInt(20) + 1;
 
       late int ans;
+
       switch (operation) {
         case '+':
           ans = a + b;
@@ -32,12 +34,17 @@ class QuestionAnsController extends GetxController {
           ans = a - b;
           break;
         case '*':
+        case '×':
           ans = a * b;
           break;
         case '/':
-          a = (a ~/ b) * b; // divisible
+        case '÷':
+          b = b == 0 ? 1 : b; // prevent division by zero
+          a = (a ~/ b) * b; // make divisible
           ans = a ~/ b;
           break;
+        default:
+          throw Exception('Unsupported operation: $operation');
       }
 
       questions.add({
@@ -46,6 +53,7 @@ class QuestionAnsController extends GetxController {
         'options': generateOptions(ans),
       });
     }
+
     currentQuestionIndex.value = 0;
     score.value = 0;
     selectedAnswer.value = '';
@@ -55,10 +63,13 @@ class QuestionAnsController extends GetxController {
   List<String> generateOptions(int correctAns) {
     final random = Random();
     Set<String> opts = {correctAns.toString()};
+
     while (opts.length < 4) {
-      int fake = correctAns + random.nextInt(10) - 5;
-      if (fake != correctAns && fake > 0) opts.add(fake.toString());
+      // +/- 5 variation
+      int fake = correctAns + random.nextInt(11) - 5;
+      if (fake != correctAns) opts.add(fake.toString());
     }
+
     final list = opts.toList();
     list.shuffle();
     return list;

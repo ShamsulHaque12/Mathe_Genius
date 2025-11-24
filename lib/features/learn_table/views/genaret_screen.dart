@@ -1,24 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/custom_widgets/leading_button_appbar.dart';
 
-class ProgressScreensView extends StatelessWidget {
-  const ProgressScreensView({super.key});
+class GenaretScreen extends StatelessWidget {
+  const GenaretScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(600),
-        child: SafeArea(child: LeadingButtonAppbar(text: "Progress",)),
+        child: SafeArea(child: LeadingButtonAppbar()),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("progress")
+            Text("Generated Table Results:",style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),)
           ],
         ),
       ),
