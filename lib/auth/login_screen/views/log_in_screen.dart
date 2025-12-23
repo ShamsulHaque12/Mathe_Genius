@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mathe_genius/auth/login_screen/controller/log_in_controller.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_text_field.dart';

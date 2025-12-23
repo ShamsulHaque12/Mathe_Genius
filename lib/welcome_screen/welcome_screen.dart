@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mathe_genius/auth/signup_screen/views/sign_up_screen.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
 import 'package:mathe_genius/navigation_screens/views/app_navigation_bar.dart';
 
-import '../auth/login_screen/views/log_in_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

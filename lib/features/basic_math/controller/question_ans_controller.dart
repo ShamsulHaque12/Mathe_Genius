@@ -11,10 +11,6 @@ class QuestionAnsController extends GetxController {
 
   final int totalQuestions = 15;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void generateQuestions({required String operation}) {
     final random = Random();

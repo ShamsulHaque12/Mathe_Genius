@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_text_field.dart';
 import 'package:mathe_genius/features/learn_table/controller/learn_table_controller.dart';
