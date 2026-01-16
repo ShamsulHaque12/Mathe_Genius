@@ -165,7 +165,7 @@ double percent = totalPercentage / 100;
                   ),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
