@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
 import '../../../core/custom_widgets/leading_button_appbar.dart';
 import '../controller/question_ans_controller.dart';
@@ -18,7 +17,6 @@ class QuizQuestionAns extends StatefulWidget {
 
 class _QuizQuestionAnsState extends State<QuizQuestionAns> {
   late QuestionAnsController controller;
-  final AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -143,7 +141,7 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
                         ? null
                         : () {
                             controller.selectAnswer(opt);
-                            playSound(controller.isCorrect.value);
+                            // ❌ playSound call removed
                           },
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 8.h),
@@ -187,17 +185,6 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
                     },
                     backgroundColor: Colors.blueAccent,
                   ),
-
-                // ElevatedButton(
-                //   onPressed: () {
-                //     if (controller.isLastQuestion) {
-                //       _showResultPopup(context);
-                //     } else {
-                //       controller.nextQuestion();
-                //     }
-                //   },
-                //   child: Text(controller.isLastQuestion ? "Finish" : "Next"),
-                // ),
               ],
             ),
           );
@@ -206,14 +193,11 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
     );
   }
 
-  void playSound(bool correct) async {
-    String path = correct
-        ? "assets/lottie/correct.mp3"
-        : "assets/lottie/wrong.mp3";
-    await audioPlayer.play(AssetSource(path));
-  }
-
   void _showResultPopup(BuildContext context) {
+    controller.saveResult(widget.operation); // save before showing
+
+    final saved = controller.getSavedResult(widget.operation);
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -234,13 +218,16 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
               Lottie.asset("assets/lottie/winer.json", height: 100.h),
               SizedBox(height: 10.h),
               Text(
-                "Your Score: ${controller.score.value} / ${controller.totalQuestions}",
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-                textAlign: TextAlign.center,
+                "Correct Answers: ${saved?['correct'] ?? 0} / ${saved?['total'] ?? 0}",
+                style: TextStyle(fontSize: 18.sp),
+              ),
+              Text(
+                "Points: ${saved?['point'] ?? 0}",
+                style: TextStyle(fontSize: 18.sp),
+              ),
+              Text(
+                "Percentage: ${saved?['percentage']?.toStringAsFixed(2) ?? '0'}%",
+                style: TextStyle(fontSize: 18.sp),
               ),
             ],
           ),
@@ -250,18 +237,10 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
                 text: "Ok",
                 onPressed: () {
                   Get.back(); // close popup
-                  Get.back(); // go to previous screen
+                  Get.back(); // back to previous screen
                 },
                 backgroundColor: Colors.blueAccent,
               ),
-
-              // child: ElevatedButton(
-              //   onPressed: () {
-              //     Get.back(); // close popup
-              //     Get.back(); // go to previous screen
-              //   },
-              //   child: Text("OK"),
-              // ),
             ),
           ],
         );

@@ -58,7 +58,7 @@ class LearnTableScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 10.w),
                 Text(
-                  "1 - 20 Numbers",
+                  "Any Numbers",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
@@ -70,53 +70,63 @@ class LearnTableScreen extends StatelessWidget {
             SizedBox(height: 10.h),
             Row(
               children: [
-                Container(
-                  height: 50.h,
-                  width: 50.w,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "-",
-                      style: TextStyle(
-                        fontSize: 30.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    int value = int.parse(controller.numberController.text);
+                    if (value > 0) {
+                      controller.numberController.text = (value - 1).toString();
+                    }
+                  },
+                  child: Container(
+                    height: 50.h,
+                    width: 50.w,
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "-",
+                        style: TextStyle(fontSize: 30.sp, color: Colors.white),
                       ),
                     ),
                   ),
                 ),
+
                 SizedBox(width: 10.w),
+
                 CustomTextField(
                   width: 200.w,
                   textEditingController: controller.numberController,
                   hintText: "Number",
+                  keyboardType: TextInputType.number,
                 ),
+
                 SizedBox(width: 10.w),
-                Container(
-                  height: 50.h,
-                  width: 50.w,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "+",
-                      style: TextStyle(
-                        fontSize: 30.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+
+                GestureDetector(
+                  onTap: () {
+                    int value = int.parse(controller.numberController.text);
+                    controller.numberController.text = (value + 1).toString();
+                  },
+                  child: Container(
+                    height: 50.h,
+                    width: 50.w,
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "+",
+                        style: TextStyle(fontSize: 30.sp, color: Colors.white),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
+
             SizedBox(height: 10.h),
             Image.asset(
               "assets/images/tom.jpg",
@@ -136,7 +146,7 @@ class LearnTableScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 10.w),
                 Text(
-                  "1 - 20 Numbers",
+                  "Any Numbers",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
@@ -148,60 +158,78 @@ class LearnTableScreen extends StatelessWidget {
             SizedBox(height: 10.h),
             Row(
               children: [
-                Container(
-                  height: 50.h,
-                  width: 50.w,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "-",
-                      style: TextStyle(
-                        fontSize: 30.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    int value = int.parse(
+                      controller.multiplicationController.text,
+                    );
+                    if (value > 0) {
+                      controller.multiplicationController.text = (value - 1)
+                          .toString();
+                    }
+                  },
+                  child: Container(
+                    height: 50.h,
+                    width: 50.w,
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "-",
+                        style: TextStyle(fontSize: 30.sp, color: Colors.white),
                       ),
                     ),
                   ),
                 ),
+
                 SizedBox(width: 10.w),
+
                 CustomTextField(
                   width: 200.w,
-                  textEditingController: controller.numberController,
+                  textEditingController: controller.multiplicationController,
                   hintText: "Number",
+                  keyboardType: TextInputType.number,
                 ),
+
                 SizedBox(width: 10.w),
-                Container(
-                  height: 50.h,
-                  width: 50.w,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "+",
-                      style: TextStyle(
-                        fontSize: 30.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+
+                GestureDetector(
+                  onTap: () {
+                    int value = int.parse(
+                      controller.multiplicationController.text,
+                    );
+                    controller.multiplicationController.text = (value + 1)
+                        .toString();
+                  },
+                  child: Container(
+                    height: 50.h,
+                    width: 50.w,
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "+",
+                        style: TextStyle(fontSize: 30.sp, color: Colors.white),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
+
             SizedBox(height: 20.h),
             CustomButtonGradient(
-              text: "Submit",
+              text: "Genaret Table 🤩",
               onPressed: () {
-                Get.to(()=>GenaretScreen());
+                controller.generatedTable();
+                Get.to(() => GenaretScreen());
               },
               backgroundColor: Colors.blueAccent,
+              borderRadius: 10.r,
             ),
           ],
         ),

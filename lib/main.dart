@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mathe_genius/welcome_screen/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // ✅ Hive initialize
+  await Hive.initFlutter();
+
+  // ✅ Open box
+  await Hive.openBox('tables');
+  await Hive.openBox('quiz_scores');
+
   runApp(const MyApp());
 }
 
@@ -18,7 +28,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
-          title: 'mathe genius ',
+          title: 'Mathe Genius',
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
         );

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
 class QuestionAnsController extends GetxController {
   var currentQuestionIndex = 0.obs;
@@ -10,6 +11,52 @@ class QuestionAnsController extends GetxController {
   var isCorrect = false.obs;
 
   final int totalQuestions = 15;
+  final int pointPerCorrect = 2;
+
+  /// Save quiz result for this operation
+  void saveResult(String operation) {
+    final box = Hive.box('quiz_scores');
+
+    int totalCorrect = score.value;
+    int totalPoint = totalCorrect * pointPerCorrect;
+    double percentage = (totalCorrect / totalQuestions) * 100;
+
+    // Save as map: key = operation
+    box.put(operation, {
+      'correct': totalCorrect,
+      'total': totalQuestions,
+      'point': totalPoint,
+      'percentage': percentage,
+    });
+  }
+
+  /// Optional: get saved result
+  Map<String, dynamic>? getSavedResult(String operation) {
+    final box = Hive.box('quiz_scores');
+    return box.get(operation);
+  }
+
+  void saveResultWeekly(String operation) {
+  final box = Hive.box('quiz_scores');
+  final today = DateTime.now().weekday; // 1-7
+
+  int totalCorrect = score.value;
+  int totalPoint = totalCorrect * pointPerCorrect;
+  double percentage = (totalCorrect / totalQuestions) * 100;
+
+  // Load previous data for operation
+  final opData = box.get(operation) ?? {};
+
+  // Save today's result
+  opData['day$today'] = {
+    'correct': totalCorrect,
+    'total': totalQuestions,
+    'point': totalPoint,
+    'percentage': percentage,
+  };
+
+  box.put(operation, opData);
+}
 
 
   void generateQuestions({required String operation}) {
@@ -73,8 +120,7 @@ class QuestionAnsController extends GetxController {
 
   void selectAnswer(String answer) {
     selectedAnswer.value = answer;
-    isCorrect.value =
-        answer == questions[currentQuestionIndex.value]['answer'];
+    isCorrect.value = answer == questions[currentQuestionIndex.value]['answer'];
     if (isCorrect.value) score.value++;
     showFeedback.value = true;
   }
@@ -87,6 +133,5 @@ class QuestionAnsController extends GetxController {
     }
   }
 
-  bool get isLastQuestion =>
-      currentQuestionIndex.value == totalQuestions - 1;
+  bool get isLastQuestion => currentQuestionIndex.value == totalQuestions - 1;
 }
