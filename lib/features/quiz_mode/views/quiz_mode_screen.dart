@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:mathe_genius/features/daily_challenge_screens/screems/daily_challenge_mode.dart';
+import 'package:mathe_genius/features/timer_quiz_screen/screen/timed_quiz_screen.dart';
 import '../../../core/custom_widgets/leading_button_appbar.dart';
 
 class QuizModeScreen extends StatelessWidget {
@@ -37,7 +38,7 @@ class QuizModeScreen extends StatelessWidget {
               icon: Icons.timer,
               color: Colors.redAccent,
               onTap: () {
-                debugPrint("Speed Round Clicked");
+                Get.to(() => TimedQuizScreen());
               },
             ),
             _QuizModeCard(

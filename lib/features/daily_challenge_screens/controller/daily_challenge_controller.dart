@@ -4,18 +4,29 @@ import 'package:get/get.dart';
 class DailyChallengeController extends GetxController {
   final Random _random = Random();
 
-  var currentIndex = 0.obs; // current question
-  var selectedAnswer = Rxn<int>(); // user selected answer
+  var currentIndex = 0.obs; 
+  var selectedAnswer = Rxn<int>(); 
   final questions = <Map<String, dynamic>>[].obs;
+
+  // Score tracking
+  var score = 0.obs;
+  var correctCount = 0.obs;
+  var wrongCount = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    _generateQuestions();
+    generateQuestions();
   }
 
-  void _generateQuestions() {
+  void generateQuestions() {
     questions.clear();
+    score.value = 0;
+    correctCount.value = 0;
+    wrongCount.value = 0;
+    currentIndex.value = 0;
+    selectedAnswer.value = null;
+
     for (int i = 0; i < 15; i++) {
       int a = _random.nextInt(20) + 1;
       int b = _random.nextInt(20) + 1;
@@ -43,11 +54,20 @@ class DailyChallengeController extends GetxController {
     }
   }
 
-  // Return true if correct
-  bool checkAnswer(int userAnswer) {
+  /// Check answer & update score
+  void checkAnswerAndUpdateScore(int userAnswer) {
+    if (selectedAnswer.value != null) return; // already answered
+
     int correctAnswer = (questions[currentIndex.value]['answer'] as num).toInt();
     selectedAnswer.value = userAnswer;
-    return userAnswer == correctAnswer;
+
+    if (userAnswer == correctAnswer) {
+      correctCount.value++;
+      score.value += 5; // correct = +5
+    } else {
+      wrongCount.value++;
+      score.value -= 3; // wrong = -3
+    }
   }
 
   void nextQuestion() {

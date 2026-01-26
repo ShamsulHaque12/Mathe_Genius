@@ -4,18 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mathe_genius/core/custom_widgets/leading_button_appbar.dart';
 import 'package:mathe_genius/features/daily_challenge_screens/controller/daily_challenge_controller.dart';
+import 'package:mathe_genius/features/timer_quiz_screen/widgets/quiz_result_dialog.dart';
 
 class DailyChallengeMode extends StatelessWidget {
   DailyChallengeMode({super.key});
 
-  final DailyChallengeController controller =
-      Get.put(DailyChallengeController());
+  final DailyChallengeController controller = Get.put(DailyChallengeController());
   final Random _random = Random();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Gradient background for gaming vibe
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -30,9 +29,8 @@ class DailyChallengeMode extends StatelessWidget {
             var q = controller.questions[controller.currentIndex.value];
             int correct = (q['answer'] as num).toInt();
 
-            // Generate 4 options
-            List<int> options = [];
-            options.add(correct);
+            // Generate options
+            List<int> options = [correct];
             while (options.length < 4) {
               int randomOption = correct + _random.nextInt(10) + 1;
               if (!options.contains(randomOption)) options.add(randomOption);
@@ -44,12 +42,10 @@ class DailyChallengeMode extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // AppBar
                   LeadingButtonAppbar(text: "Daily Quiz"),
-
                   SizedBox(height: 10.h),
 
-                  // Progress Bar with question count
+                  // Progress Bar
                   Stack(
                     children: [
                       Container(
@@ -115,7 +111,7 @@ class DailyChallengeMode extends StatelessWidget {
                   ),
                   SizedBox(height: 32.h),
 
-                  // Answer Buttons (2x2)
+                  // Answer Buttons
                   Wrap(
                     spacing: 16.w,
                     runSpacing: 16.h,
@@ -126,8 +122,6 @@ class DailyChallengeMode extends StatelessWidget {
                           bgColor = Colors.green;
                         } else if (option == controller.selectedAnswer.value) {
                           bgColor = Colors.red;
-                        } else {
-                          bgColor = Colors.blueAccent;
                         }
                       }
 
@@ -143,7 +137,7 @@ class DailyChallengeMode extends StatelessWidget {
                             elevation: 6,
                           ),
                           onPressed: controller.selectedAnswer.value == null
-                              ? () => controller.checkAnswer(option)
+                              ? () => controller.checkAnswerAndUpdateScore(option)
                               : null,
                           child: Text(
                             '$option',
@@ -207,15 +201,23 @@ class DailyChallengeMode extends StatelessWidget {
     );
   }
 
+  // Show Custom Result Dialog
   void _showResult(BuildContext context) {
-    Get.defaultDialog(
-      title: 'Challenge Completed!',
-      middleText: 'You have finished all questions 🎉',
-      textConfirm: 'OK',
-      onConfirm: () {
-        Get.back();
-        Get.back();
-      },
+    Get.dialog(
+      QuizResultDialog(
+        score: controller.score.value,
+        correct: controller.correctCount.value,
+        wrong: controller.wrongCount.value,
+        onPlayAgain: () {
+          Get.back();
+          controller.generateQuestions();
+        },
+        onBack: () {
+          Get.back();
+          Get.back();
+        },
+      ),
+      barrierDismissible: false,
     );
   }
 }

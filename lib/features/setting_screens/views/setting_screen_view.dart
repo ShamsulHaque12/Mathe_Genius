@@ -182,23 +182,6 @@ class SettingScreenView extends StatelessWidget {
 
               SizedBox(height: 10.h),
 
-              /// Theme mode
-              Text(
-                "Theme Mode",
-                style: GoogleFonts.outfit(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10.h),
-              
-
-              SizedBox(height: 10.h),
-
-              Divider(color: Colors.grey.shade300, thickness: 1),
-
-              SizedBox(height: 10.h),
-
               /// Privacy Policy section stays same
               AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
