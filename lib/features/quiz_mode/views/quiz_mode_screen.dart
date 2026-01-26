@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:mathe_genius/features/daily_challenge_screens/screems/daily_challenge_mode.dart';
+import 'package:mathe_genius/features/levels_quiz_screeb/screens/levels_quiz_screen.dart';
+import 'package:mathe_genius/features/quiz_mode/controller/quiz_mode_controller.dart';
 import 'package:mathe_genius/features/timer_quiz_screen/screen/timed_quiz_screen.dart';
 import '../../../core/custom_widgets/leading_button_appbar.dart';
 
 class QuizModeScreen extends StatelessWidget {
-  const QuizModeScreen({super.key});
+ QuizModeScreen({super.key});
+ final QuizModeController controller = Get.put(QuizModeController());
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,7 @@ class QuizModeScreen extends StatelessWidget {
               icon: Icons.bar_chart,
               color: Colors.blue,
               onTap: () {
-                debugPrint("Levels Quiz Clicked");
+                Get.to(() => LevelsQuizScreen());
               },
             ),
             _QuizModeCard(

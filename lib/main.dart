@@ -13,6 +13,7 @@ void main() async {
   // ✅ Open box
   await Hive.openBox('tables');
   await Hive.openBox('quiz_scores');
+  await Hive.openBox('quiz_progress');
 
   runApp(const MyApp());
 }

@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 class DailyChallengeController extends GetxController {
   final Random _random = Random();
 
-  var currentIndex = 0.obs; 
-  var selectedAnswer = Rxn<int>(); 
+  var currentIndex = 0.obs;
+  var selectedAnswer = Rxn<int>();
   final questions = <Map<String, dynamic>>[].obs;
 
   // Score tracking
@@ -45,12 +45,7 @@ class DailyChallengeController extends GetxController {
           answer = a * b;
       }
 
-      questions.add({
-        'a': a,
-        'b': b,
-        'type': type,
-        'answer': answer,
-      });
+      questions.add({'a': a, 'b': b, 'type': type, 'answer': answer});
     }
   }
 
@@ -58,7 +53,8 @@ class DailyChallengeController extends GetxController {
   void checkAnswerAndUpdateScore(int userAnswer) {
     if (selectedAnswer.value != null) return; // already answered
 
-    int correctAnswer = (questions[currentIndex.value]['answer'] as num).toInt();
+    int correctAnswer = (questions[currentIndex.value]['answer'] as num)
+        .toInt();
     selectedAnswer.value = userAnswer;
 
     if (userAnswer == correctAnswer) {

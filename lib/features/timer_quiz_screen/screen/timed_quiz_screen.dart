@@ -79,8 +79,9 @@ class TimedQuizScreen extends StatelessWidget {
                       Color bg = Colors.blueAccent;
 
                       if (controller.isAnswered.value) {
-                        if (opt == correct) bg = Colors.green;
-                        else if (opt == controller.selectedAnswer.value) {
+                        if (opt == correct) {
+                          bg = Colors.green;
+                        } else if (opt == controller.selectedAnswer.value) {
                           bg = Colors.red;
                         }
                       }
