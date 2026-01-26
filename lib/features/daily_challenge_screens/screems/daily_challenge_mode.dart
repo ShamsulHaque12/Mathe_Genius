@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mathe_genius/core/custom_widgets/leading_button_appbar.dart';
 import 'package:mathe_genius/features/daily_challenge_screens/controller/daily_challenge_controller.dart';
+import 'package:mathe_genius/features/quiz_mode/controller/quiz_mode_controller.dart';
 import 'package:mathe_genius/features/timer_quiz_screen/widgets/quiz_result_dialog.dart';
 
 class DailyChallengeMode extends StatelessWidget {
@@ -202,22 +203,28 @@ class DailyChallengeMode extends StatelessWidget {
   }
 
   // Show Custom Result Dialog
-  void _showResult(BuildContext context) {
-    Get.dialog(
-      QuizResultDialog(
-        score: controller.score.value,
-        correct: controller.correctCount.value,
-        wrong: controller.wrongCount.value,
-        onPlayAgain: () {
-          Get.back();
-          controller.generateQuestions();
-        },
-        onBack: () {
-          Get.back();
-          Get.back();
-        },
-      ),
-      barrierDismissible: false,
-    );
-  }
+ void _showResult(BuildContext context) {
+  final quizModeController = Get.find<QuizModeController>();
+
+  // 🔥 Save score to Hive
+  quizModeController.saveDailyScore(controller.score.value);
+
+  Get.dialog(
+    QuizResultDialog(
+      score: controller.score.value,
+      correct: controller.correctCount.value,
+      wrong: controller.wrongCount.value,
+      onPlayAgain: () {
+        Get.back();
+        controller.generateQuestions();
+      },
+      onBack: () {
+        Get.back(); // dialog
+        Get.back(); // screen
+      },
+    ),
+    barrierDismissible: false,
+  );
+}
+
 }
