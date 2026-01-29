@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mathe_genius/core/custom_widgets/leading_button_appbar.dart';
 import 'package:mathe_genius/features/daily_challenge_screens/screems/daily_challenge_mode.dart';
-import 'package:mathe_genius/features/levels_quiz_screeb/screens/levels_quiz_screen.dart';
+import 'package:mathe_genius/features/levels_quiz_screen/screens/levels_quiz_screen.dart';
 import 'package:mathe_genius/features/quiz_mode/controller/quiz_mode_controller.dart';
 import 'package:mathe_genius/features/timer_quiz_screen/screen/timed_quiz_screen.dart';
 
@@ -15,62 +15,70 @@ class QuizModeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF5F7FB),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
-        child: SafeArea(
-          child: LeadingButtonAppbar(text: "Quiz Mode"),
+      // Gradient background
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff6D83F2), Color(0xff9A63F7)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Obx(
-          () => Column(
-            children: [
-              // ======= Daily Challenge =======
-              _QuizModeCard(
-                title: 'Daily\nChallenge',
-                icon: Icons.calendar_today,
-                color: Colors.orange,
-                onTap: () => Get.to(() => DailyChallengeMode()),
-              ),
-              SizedBox(height: 16.h),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // APPBAR
+                LeadingButtonAppbar(text: "Quiz Mode"),
 
-              // ======= Speed Round =======
-              _QuizModeCard(
-                title: 'Speed\nRound',
-                icon: Icons.timer,
-                color: Colors.redAccent,
-                isLocked: !controller.speedUnlocked.value,
-                onTap: () => Get.to(() => TimedQuizScreen()),
-              ),
-              SizedBox(height: 16.h),
+                SizedBox(height: 20.h),
 
-              // ======= Levels Quiz =======
-              _QuizModeCard(
-                title: 'Levels\nQuiz',
-                icon: Icons.bar_chart,
-                color: Colors.blue,
-                isLocked: !controller.levelsUnlocked.value,
-                onTap: () => Get.to(() => LevelsQuizScreen()),
-              ),
-              SizedBox(height: 16.h),
+                Obx(
+                  () => Column(
+                    children: [
+                      // ======= Daily Challenge =======
+                      _QuizModeCard(
+                        title: 'Daily\nChallenge',
+                        icon: Icons.calendar_today,
+                        color: Colors.orange,
+                        onTap: () => Get.to(() => DailyChallengeMode()),
+                      ),
+                      SizedBox(height: 16.h),
 
-              // ======= Table Battle =======
-              _QuizModeCard(
-                title: 'Table\nBattle',
-                icon: Icons.flash_on,
-                color: Colors.purple,
-                isLocked: !controller.tableUnlocked.value,
-                onTap: () => debugPrint("Table Battle Clicked"),
-              ),
-            ],
+                      // ======= Speed Round =======
+                      _QuizModeCard(
+                        title: 'Speed\nRound',
+                        icon: Icons.timer,
+                        color: Colors.redAccent,
+                        isLocked: !controller.speedUnlocked.value,
+                        onTap: () => Get.to(() => TimedQuizScreen()),
+                      ),
+                      SizedBox(height: 16.h),
+
+                      // ======= Levels Quiz =======
+                      _QuizModeCard(
+                        title: 'Levels\nQuiz',
+                        icon: Icons.bar_chart,
+                        color: Colors.blue,
+                        isLocked: !controller.levelsUnlocked.value,
+                        onTap: () => Get.to(() => LevelsQuizScreen()),
+                      ),
+                      SizedBox(height: 16.h),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
 
 /// ===============================
 /// QUIZ MODE CARD WIDGET

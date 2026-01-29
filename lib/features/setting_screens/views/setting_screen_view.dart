@@ -20,6 +20,7 @@ class SettingScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffF5F7FB),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(15.w),

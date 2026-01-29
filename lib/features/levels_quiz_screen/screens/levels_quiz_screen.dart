@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mathe_genius/core/custom_widgets/leading_button_appbar.dart';
-import 'package:mathe_genius/features/levels_quiz_screeb/controller/levels_quiz_controller.dart';
+import 'package:mathe_genius/features/levels_quiz_screen/controller/levels_quiz_controller.dart';
 
 class LevelsQuizScreen extends StatelessWidget {
   LevelsQuizScreen({super.key});
@@ -19,43 +19,57 @@ class LevelsQuizScreen extends StatelessWidget {
             children: [
               LeadingButtonAppbar(text: "Levels Quiz"),
 
-             SizedBox(height: 24.h),
+              SizedBox(height: 24.h),
 
-              /// EASY
+              /// ---------------- EASY (Always Open) ----------------
               _levelCard(
                 title: "Easy",
                 subtitle: "Simple Math",
                 icon: Icons.sentiment_satisfied_alt,
                 gradient: const [Color(0xff43cea2), Color(0xff185a9d)],
-                onTap: () {
-                  // controller.startEasy();
-                },
+                onTap: () => controller.startQuiz("easy"),
               ),
 
-             SizedBox(height: 16.h),
+              SizedBox(height: 16.h),
 
-              /// NORMAL
-              _levelCard(
-                title: "Normal",
-                subtitle: "Mixed Operations",
-                icon: Icons.flash_on,
-                gradient: const [Color(0xfff7971e), Color(0xfffdc830)],
-                onTap: () {
-                  // controller.startNormal();
-                },
+              /// ---------------- NORMAL ----------------
+              Obx(
+                () => _levelCard(
+                  title: "Normal",
+                  subtitle: controller.normalUnlocked.value
+                      ? "Mixed Operations"
+                      : "Locked 🔒 (Score 55)",
+                  icon: Icons.flash_on,
+                  gradient: controller.normalUnlocked.value
+                      ? const [Color(0xfff7971e), Color(0xfffdc830)]
+                      : [Colors.grey.shade600, Colors.grey.shade800],
+                  onTap: controller.normalUnlocked.value
+                      ? () => controller.startQuiz("normal")
+                      : () => controller.showLockedDialog(
+                          "Easy level এ 55 point করলে Normal unlock হবে",
+                        ),
+                ),
               ),
 
               SizedBox(height: 16.h),
 
               /// HARD
-              _levelCard(
-                title: "Hard",
-                subtitle: "Brain Challenge",
-                icon: Icons.whatshot,
-                gradient: const [Color(0xffcb2d3e), Color(0xffef473a)],
-                onTap: () {
-                  // controller.startHard();
-                },
+              Obx(
+                () => _levelCard(
+                  title: "Hard",
+                  subtitle: controller.hardUnlocked.value
+                      ? "Brain Challenge"
+                      : "Locked 🔒 (Score 65)",
+                  icon: Icons.whatshot,
+                  gradient: controller.hardUnlocked.value
+                      ? const [Color(0xffcb2d3e), Color(0xffef473a)]
+                      : [Colors.grey.shade600, Colors.grey.shade800],
+                  onTap: controller.hardUnlocked.value
+                      ? () => controller.startQuiz("hard")
+                      : () => controller.showLockedDialog(
+                          "Normal level এ 65 point করলে Hard unlock হবে",
+                        ),
+                ),
               ),
             ],
           ),
@@ -107,7 +121,7 @@ class LevelsQuizScreen extends StatelessWidget {
                 child: Icon(icon, color: Colors.white, size: 30.sp),
               ),
 
-             SizedBox(width: 18.w),
+              SizedBox(width: 18.w),
 
               /// TEXT
               Column(
@@ -122,7 +136,7 @@ class LevelsQuizScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                 SizedBox(height: 4.h),
+                  SizedBox(height: 4.h),
                   Text(
                     subtitle,
                     style: TextStyle(
@@ -136,7 +150,7 @@ class LevelsQuizScreen extends StatelessWidget {
               const Spacer(),
 
               /// ARROW
-             Icon(
+              Icon(
                 Icons.arrow_forward_ios_rounded,
                 color: Colors.white,
                 size: 20.sp,
