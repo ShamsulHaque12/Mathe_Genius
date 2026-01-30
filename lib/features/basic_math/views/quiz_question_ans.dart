@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
 import '../../../core/custom_widgets/leading_button_appbar.dart';
@@ -71,15 +72,12 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
           width: double.infinity,
           height: double.infinity,
           decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xff6D83F2),
-              Color(0xff9A63F7),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            gradient: LinearGradient(
+              colors: [Color(0xff6D83F2), Color(0xff9A63F7)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-        ),
           child: SafeArea(
             child: Obx(() {
               if (controller.currentQuestionIndex.value >=
@@ -87,10 +85,10 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
                 Future.delayed(Duration.zero, () => _showResultPopup(context));
                 return SizedBox.shrink();
               }
-            
+
               final question =
                   controller.questions[controller.currentQuestionIndex.value];
-            
+
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
                 child: Column(
@@ -106,7 +104,7 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
                       ),
                     ),
                     SizedBox(height: 20.h),
-            
+
                     Card(
                       elevation: 4,
                       color: Colors.blue.shade50,
@@ -125,14 +123,14 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
                         ),
                       ),
                     ),
-            
+
                     SizedBox(height: 30.h),
-            
+
                     ...question['options'].map<Widget>((opt) {
                       bool isSelected = controller.selectedAnswer.value == opt;
                       bool isCorrectAnswer = opt == question['answer'];
                       Color color = Colors.white;
-            
+
                       if (controller.showFeedback.value) {
                         if (isSelected && controller.isCorrect.value) {
                           color = Colors.green;
@@ -144,7 +142,7 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
                           color = Colors.green.withOpacity(0.6);
                         }
                       }
-            
+
                       return GestureDetector(
                         onTap: controller.showFeedback.value
                             ? null
@@ -178,9 +176,9 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
                         ),
                       );
                     }).toList(),
-            
+
                     Spacer(),
-            
+
                     if (controller.showFeedback.value)
                       CustomButtonGradient(
                         height: 40.h,
@@ -206,58 +204,89 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
     );
   }
 
-  void _showResultPopup(BuildContext context) {
-    controller.saveResult(widget.operation); // save before showing
+void _showResultPopup(BuildContext context) {
+  /// ✅ Save recent 7 logic
+  controller.saveResultRecent7(widget.operation);
 
-    final saved = controller.getSavedResult(widget.operation);
+  final box = Hive.box('quiz_scores');
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.yellow.shade50,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
+  /// 🟢 Safe load operation data
+  final rawOpData = box.get(widget.operation);
+  final Map<String, dynamic> opData =
+      rawOpData != null ? Map<String, dynamic>.from(rawOpData) : {};
+
+  /// 🟢 Safe load attempts list
+  final List<Map<String, dynamic>> attempts =
+      opData['attempts'] != null
+          ? (opData['attempts'] as List)
+              .map((e) => Map<String, dynamic>.from(e))
+              .toList()
+          : [];
+
+  /// 🟢 Latest attempt
+  final Map<String, dynamic> saved =
+      attempts.isNotEmpty ? attempts.last : {};
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: Colors.yellow.shade50,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        title: Text(
+          "Quiz Finished!",
+          style: TextStyle(
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
           ),
-          title: Text(
-            "Quiz Finished!",
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Lottie.asset("assets/lottie/winer.json", height: 100.h),
-              SizedBox(height: 10.h),
-              Text(
-                "Correct Answers: ${saved?['correct'] ?? 0} / ${saved?['total'] ?? 0}",
-                style: TextStyle(fontSize: 18.sp),
-              ),
-              Text(
-                "Points: ${saved?['point'] ?? 0}",
-                style: TextStyle(fontSize: 18.sp),
-              ),
-              Text(
-                "Percentage: ${saved?['percentage']?.toStringAsFixed(2) ?? '0'}%",
-                style: TextStyle(fontSize: 18.sp),
-              ),
-            ],
-          ),
-          actions: [
-            Center(
-              child: CustomButtonGradient(
-                text: "Ok",
-                onPressed: () {
-                  Get.back(); // close popup
-                  Get.back(); // back to previous screen
-                },
-                backgroundColor: Colors.blueAccent,
-              ),
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            /// 🎉 Animation
+            Lottie.asset(
+              "assets/lottie/winer.json",
+              height: 100.h,
+            ),
+            SizedBox(height: 10.h),
+
+            /// 📊 Result
+            Text(
+              "Correct Answers: ${saved['correct'] ?? 0} / ${saved['total'] ?? 0}",
+              style: TextStyle(fontSize: 18.sp),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              "Points: ${saved['point'] ?? 0}",
+              style: TextStyle(fontSize: 18.sp),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              "Percentage: ${((saved['percentage'] ?? 0) as num).toStringAsFixed(2)}%",
+              style: TextStyle(fontSize: 18.sp),
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+        actions: [
+          Center(
+            child: CustomButtonGradient(
+              text: "Ok",
+              backgroundColor: Colors.blueAccent,
+              onPressed: () {
+                Get.back(); // popup
+                Get.back(); // quiz screen
+              },
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 }
