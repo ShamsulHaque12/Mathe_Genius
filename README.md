@@ -70,7 +70,7 @@ assets/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ShamsulHaque12/Mathe_Genius.git
    cd mathe_genius
    ```
 
@@ -159,9 +159,9 @@ This project is licensed under the MIT License - see LICENSE file for details.
 Contributions are welcome! Please follow these steps:
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+2. Create your feature branch (`git checkout -b main/sujon`)
 3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+4. Push to the branch (`git push origin main/sujon`)
 5. Open a Pull Request
 
 ## 📞 Support
