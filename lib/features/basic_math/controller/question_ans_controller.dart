@@ -13,52 +13,53 @@ class QuestionAnsController extends GetxController {
   final int totalQuestions = 15;
   final int pointPerCorrect = 2;
 
-  /// Save quiz result for this operation
-  void saveResult(String operation) {
-    final box = Hive.box('quiz_scores');
-
-    int totalCorrect = score.value;
-    int totalPoint = totalCorrect * pointPerCorrect;
-    double percentage = (totalCorrect / totalQuestions) * 100;
-
-    // Save as map: key = operation
-    box.put(operation, {
-      'correct': totalCorrect,
-      'total': totalQuestions,
-      'point': totalPoint,
-      'percentage': percentage,
-    });
-  }
-
-  /// Optional: get saved result
-  Map<String, dynamic>? getSavedResult(String operation) {
-    final box = Hive.box('quiz_scores');
-    return box.get(operation);
-  }
-
-  void saveResultWeekly(String operation) {
+  // =========================================================
+  // ✅ SAVE ONLY LAST 7 QUIZ ATTEMPTS (ROLLING SYSTEM)
+  // =========================================================
+  void saveResultRecent7(String operation) {
   final box = Hive.box('quiz_scores');
-  final today = DateTime.now().weekday; // 1-7
 
   int totalCorrect = score.value;
   int totalPoint = totalCorrect * pointPerCorrect;
   double percentage = (totalCorrect / totalQuestions) * 100;
 
-  // Load previous data for operation
-  final opData = box.get(operation) ?? {};
+  /// 🟢 Load old data safely
+  final rawOpData = box.get(operation);
+  Map<String, dynamic> opData = rawOpData != null
+      ? Map<String, dynamic>.from(rawOpData)
+      : {};
 
-  // Save today's result
-  opData['day$today'] = {
+  /// 🟢 Load attempts safely & convert types
+  List<Map<String, dynamic>> attempts = [];
+
+  if (opData['attempts'] != null) {
+    attempts = (opData['attempts'] as List)
+        .map((e) => Map<String, dynamic>.from(e))
+        .toList();
+  }
+
+  /// ❌ Remove oldest if already 7
+  if (attempts.length >= 7) {
+    attempts.removeAt(0);
+  }
+
+  /// ✅ Add new attempt
+  attempts.add({
     'correct': totalCorrect,
     'total': totalQuestions,
     'point': totalPoint,
     'percentage': percentage,
-  };
+    'time': DateTime.now().toIso8601String(),
+  });
 
+  /// 🟢 Save back
+  opData['attempts'] = attempts;
   box.put(operation, opData);
 }
 
-
+  // =========================================================
+  // 🧠 QUIZ LOGIC (UNCHANGED)
+  // =========================================================
   void generateQuestions({required String operation}) {
     final random = Random();
     questions.clear();
@@ -66,7 +67,6 @@ class QuestionAnsController extends GetxController {
     for (int i = 0; i < totalQuestions; i++) {
       int a = random.nextInt(20) + 1;
       int b = random.nextInt(20) + 1;
-
       late int ans;
 
       switch (operation) {
@@ -82,12 +82,12 @@ class QuestionAnsController extends GetxController {
           break;
         case '/':
         case '÷':
-          b = b == 0 ? 1 : b; // prevent division by zero
-          a = (a ~/ b) * b; // make divisible
+          b = b == 0 ? 1 : b;
+          a = (a ~/ b) * b;
           ans = a ~/ b;
           break;
         default:
-          throw Exception('Unsupported operation: $operation');
+          throw Exception('Unsupported operation');
       }
 
       questions.add({
@@ -108,7 +108,6 @@ class QuestionAnsController extends GetxController {
     Set<String> opts = {correctAns.toString()};
 
     while (opts.length < 4) {
-      // +/- 5 variation
       int fake = correctAns + random.nextInt(11) - 5;
       if (fake != correctAns) opts.add(fake.toString());
     }
@@ -120,7 +119,8 @@ class QuestionAnsController extends GetxController {
 
   void selectAnswer(String answer) {
     selectedAnswer.value = answer;
-    isCorrect.value = answer == questions[currentQuestionIndex.value]['answer'];
+    isCorrect.value =
+        answer == questions[currentQuestionIndex.value]['answer'];
     if (isCorrect.value) score.value++;
     showFeedback.value = true;
   }
@@ -133,5 +133,6 @@ class QuestionAnsController extends GetxController {
     }
   }
 
-  bool get isLastQuestion => currentQuestionIndex.value == totalQuestions - 1;
+  bool get isLastQuestion =>
+      currentQuestionIndex.value == totalQuestions - 1;
 }
