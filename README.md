@@ -1,6 +1,6 @@
 # Mathe Genius
 
-An AI-powered mathematics learning application built with Flutter that helps users master multiplication tables and math quizzes through interactive, gamified learning experiences.
+An mathematics learning application built with Flutter that helps users master multiplication tables and math quizzes through interactive, gamified learning experiences.
 
 ## 🎯 Features
 
