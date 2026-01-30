@@ -96,7 +96,7 @@ flutter build apk --release
 flutter build ios --release
 ```
 ## Buid APK File
-App link: https://drive.google.com/file/d/1Rfq04ac7s3mhej1Ip5v5AVUiBjWRjXyn/view?usp=sharing
+App link: https://drive.google.com/file/d/1Ty8XhMWUv1jkh_9JB1kZcXbln-69MV-m/view?usp=sharing
 
 ## 📦 Dependencies
 
