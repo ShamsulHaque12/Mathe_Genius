@@ -18,9 +18,9 @@ class QuizModeController extends GetxController {
   void loadProgress() {
     dailyScore.value = box.get('dailyScore', defaultValue: 0);
 
-    speedUnlocked.value = dailyScore.value >= 00;
-    levelsUnlocked.value = dailyScore.value >= 00;
-    tableUnlocked.value = dailyScore.value >= 00;
+    speedUnlocked.value = dailyScore.value >= 60;
+    levelsUnlocked.value = dailyScore.value >= 60;
+    tableUnlocked.value = dailyScore.value >= 60;
   }
 
   /// Call after Daily Challenge finished
