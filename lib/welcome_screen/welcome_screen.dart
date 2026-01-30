@@ -12,24 +12,45 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 50.h,),
-            Text(
-              'Welcome to Mathe Genius!',
-              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            Lottie.asset('assets/lottie/children.json'),
-          ],
+      body: Container(
+         width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff6D83F2),
+              Color(0xff9A63F7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              SizedBox(height: 50.h,),
+              Text(
+                'Welcome to Mathe Genius!',
+                style: TextStyle(fontSize: 26.sp, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20.h),
+              Lottie.asset('assets/lottie/children.json'),
+            ],
+          ),
         ),
       ),
       bottomSheet: Container(
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 198, 202, 209),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xff6D83F2),
+              Color(0xff9A63F7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
         ),
         height: 200.h,
         width: double.infinity,
@@ -48,54 +69,6 @@ class WelcomeScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 10.h),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     Text(
-            //       "Don't have an account? ",
-            //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-            //     ),
-            //     GestureDetector(
-            //       onTap: () {
-            //         Get.to(() => SignUpScreen());
-            //       },
-            //       child: const Text(
-            //         "Sign Up",
-            //         style: TextStyle(
-            //           color: Color.fromARGB(255, 223, 8, 26),
-            //           fontWeight: FontWeight.bold,
-            //           decoration: TextDecoration.underline,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // SizedBox(height: 5.h),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     IconButton(
-            //       icon: const Icon(
-            //         Icons.facebook,
-            //         color: Colors.blue,
-            //         size: 50,
-            //       ),
-            //       onPressed: () {},
-            //     ),
-            //     IconButton(
-            //       icon: const Icon(
-            //         Icons.g_mobiledata,
-            //         color: Colors.red,
-            //         size: 50,
-            //       ),
-            //       onPressed: () {},
-            //     ),
-            //     IconButton(
-            //       icon: const Icon(Icons.apple, color: Colors.black, size: 50),
-            //       onPressed: () {},
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),
