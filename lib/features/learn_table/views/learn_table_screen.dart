@@ -15,223 +15,185 @@ class LearnTableScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(600),
-        child: SafeArea(child: LeadingButtonAppbar(text: "Learn Table")),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Text(
-                "Generate Table",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h),
-            Center(
-              child: Text(
-                "Create your multiplication magic!",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h),
-            Row(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff6D83F2), Color(0xff9A63F7)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(15.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    LeadingButtonAppbar(),
+                    SizedBox(width: 10.w),
+                    Text(
+                      "Learn Table",
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                /// APPBAR TITLE
+                Center(
+                  child: Text(
+                    "Generate Table",
+                    style: TextStyle(
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Center(
+                  child: Text(
+                    "Create your multiplication magic!",
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+
+                /// FIRST NUMBER
                 Text(
                   "First Number : ",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
-                SizedBox(width: 10.w),
-                Text(
-                  "Any Numbers",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.h),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    int value = int.parse(controller.numberController.text);
-                    if (value > 0) {
-                      controller.numberController.text = (value - 1).toString();
-                    }
-                  },
-                  child: Container(
-                    height: 50.h,
-                    width: 50.w,
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(10.r),
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    _numberButton(
+                      icon: "-",
+                      onTap: () {
+                        int value = int.parse(controller.numberController.text);
+                        if (value > 0) {
+                          controller.numberController.text = (value - 1).toString();
+                        }
+                      },
                     ),
-                    child: Center(
-                      child: Text(
-                        "-",
-                        style: TextStyle(fontSize: 30.sp, color: Colors.white),
-                      ),
+                    SizedBox(width: 10.w),
+                    CustomTextField(
+                      width: 200.w,
+                      textEditingController: controller.numberController,
+                      hintText: "Number",
+                      keyboardType: TextInputType.number,
+                      textColor: Colors.white,
+                      fillColor: Colors.white24,
                     ),
-                  ),
+                    SizedBox(width: 10.w),
+                    _numberButton(
+                      icon: "+",
+                      onTap: () {
+                        int value = int.parse(controller.numberController.text);
+                        controller.numberController.text = (value + 1).toString();
+                      },
+                    ),
+                  ],
                 ),
 
-                SizedBox(width: 10.w),
+                SizedBox(height: 20.h),
 
-                CustomTextField(
-                  width: 200.w,
-                  textEditingController: controller.numberController,
-                  hintText: "Number",
-                  keyboardType: TextInputType.number,
-                ),
-
-                SizedBox(width: 10.w),
-
-                GestureDetector(
-                  onTap: () {
-                    int value = int.parse(controller.numberController.text);
-                    controller.numberController.text = (value + 1).toString();
-                  },
-                  child: Container(
-                    height: 50.h,
-                    width: 50.w,
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "+",
-                        style: TextStyle(fontSize: 30.sp, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 10.h),
-            Image.asset(
-              "assets/images/tom.jpg",
-              height: 150.h,
-              width: double.infinity,
-            ),
-            SizedBox(height: 10.h),
-            Row(
-              children: [
+                /// MULTIPLICATION NUMBER
                 Text(
                   "Multiplication Number : ",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
-                SizedBox(width: 10.w),
-                Text(
-                  "Any Numbers",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey,
-                  ),
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    _numberButton(
+                      icon: "-",
+                      onTap: () {
+                        int value = int.parse(controller.multiplicationController.text);
+                        if (value > 0) {
+                          controller.multiplicationController.text = (value - 1).toString();
+                        }
+                      },
+                    ),
+                    SizedBox(width: 10.w),
+                    CustomTextField(
+                      width: 200.w,
+                      textEditingController: controller.multiplicationController,
+                      hintText: "Number",
+                      keyboardType: TextInputType.number,
+                      textColor: Colors.white,
+                      fillColor: Colors.white24,
+                    ),
+                    SizedBox(width: 10.w),
+                    _numberButton(
+                      icon: "+",
+                      onTap: () {
+                        int value = int.parse(controller.multiplicationController.text);
+                        controller.multiplicationController.text = (value + 1).toString();
+                      },
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 30.h),
+
+                /// GENERATE BUTTON
+                CustomButtonGradient(
+                  text: "Generate Table 🤩",
+                  onPressed: () {
+                    controller.generatedTable();
+                    Get.to(() => GenaretScreen());
+                  },
+                  backgroundColor: Colors.amber,
+                  borderRadius: 12.r,
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    int value = int.parse(
-                      controller.multiplicationController.text,
-                    );
-                    if (value > 0) {
-                      controller.multiplicationController.text = (value - 1)
-                          .toString();
-                    }
-                  },
-                  child: Container(
-                    height: 50.h,
-                    width: 50.w,
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "-",
-                        style: TextStyle(fontSize: 30.sp, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
+          ),
+        ),
+      ),
+    );
+  }
 
-                SizedBox(width: 10.w),
-
-                CustomTextField(
-                  width: 200.w,
-                  textEditingController: controller.multiplicationController,
-                  hintText: "Number",
-                  keyboardType: TextInputType.number,
-                ),
-
-                SizedBox(width: 10.w),
-
-                GestureDetector(
-                  onTap: () {
-                    int value = int.parse(
-                      controller.multiplicationController.text,
-                    );
-                    controller.multiplicationController.text = (value + 1)
-                        .toString();
-                  },
-                  child: Container(
-                    height: 50.h,
-                    width: 50.w,
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "+",
-                        style: TextStyle(fontSize: 30.sp, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 20.h),
-            CustomButtonGradient(
-              text: "Genaret Table 🤩",
-              onPressed: () {
-                controller.generatedTable();
-                Get.to(() => GenaretScreen());
-              },
-              backgroundColor: Colors.blueAccent,
-              borderRadius: 10.r,
-            ),
-          ],
+  /// reusable +/- button
+  Widget _numberButton({required String icon, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 50.h,
+        width: 50.w,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xfff7971e), Color(0xfffdc830)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: Center(
+          child: Text(
+            icon,
+            style: TextStyle(fontSize: 30.sp, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

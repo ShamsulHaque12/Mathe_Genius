@@ -33,140 +33,155 @@ class ProgressScreensView extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.h),
-        child: SafeArea(child: LeadingButtonAppbar(text: "Progress")),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Your Quiz Progress",
-              style: TextStyle(
-                fontSize: 24.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            SizedBox(height: 12.h),
-
-            /// Cards per operation
-            ...operations.map((op) {
-             final opData = box.get(op['symbol']) ?? {};
-
-// total for week
-int totalCorrect = 0;
-int totalQuestions = 0;
-int totalPoints = 0;
-
-for (int day = 1; day <= 7; day++) {
-  final dayData = opData['day$day'] ?? {
-    "correct": 0,
-    "total": 0,
-    "point": 0,
-    "percentage": 0.0
-  };
-
-  totalCorrect += (dayData['correct'] as num?)?.toInt() ?? 0;
-  totalQuestions += (dayData['total'] as num?)?.toInt() ?? 0;
-  totalPoints += (dayData['point'] as num?)?.toInt() ?? 0;
-}
-
-double totalPercentage =
-    totalQuestions > 0 ? (totalCorrect / totalQuestions) * 100 : 0.0;
-double percent = totalPercentage / 100;
-
-
-              return GestureDetector(
-                onTap: () {
-                  Get.to(() => WeeklyDetailScreen(operation: op['symbol']));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 12.h),
-                  padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.r),
-                    gradient: LinearGradient(
-                      colors: List<Color>.from(op['colors']),
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
+      body: Container(
+         width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff6D83F2),
+              Color(0xff9A63F7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LeadingButtonAppbar(text: "Progress"),
+                Text(
+                  "Your Quiz Progress",
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Operation: ${op['symbol']}",
-                        style: TextStyle(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                ),
+                SizedBox(height: 12.h),
+          
+                /// Cards per operation
+                ...operations.map((op) {
+                  final opData = box.get(op['symbol']) ?? {};
+          
+                  // total for week
+                  int totalCorrect = 0;
+                  int totalQuestions = 0;
+                  int totalPoints = 0;
+          
+                  for (int day = 1; day <= 7; day++) {
+                    final dayData =
+                        opData['day$day'] ??
+                        {"correct": 0, "total": 0, "point": 0, "percentage": 0.0};
+          
+                    totalCorrect += (dayData['correct'] as num?)?.toInt() ?? 0;
+                    totalQuestions += (dayData['total'] as num?)?.toInt() ?? 0;
+                    totalPoints += (dayData['point'] as num?)?.toInt() ?? 0;
+                  }
+          
+                  double totalPercentage = totalQuestions > 0
+                      ? (totalCorrect / totalQuestions) * 100
+                      : 0.0;
+                  double percent = totalPercentage / 100;
+          
+                  return GestureDetector(
+                    onTap: () {
+                      Get.to(() => WeeklyDetailScreen(operation: op['symbol']));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 12.h),
+                      padding: EdgeInsets.all(16.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.r),
+                        gradient: LinearGradient(
+                          colors: List<Color>.from(op['colors']),
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        "Correct: $totalCorrect / $totalQuestions",
-                        style: TextStyle(fontSize: 16.sp, color: Colors.white),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        "Points: $totalPoints",
-                        style: TextStyle(fontSize: 16.sp, color: Colors.white),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        "Percentage: ${totalPercentage.toStringAsFixed(2)}%",
-                        style: TextStyle(fontSize: 16.sp, color: Colors.white),
-                      ),
-                      SizedBox(height: 12.h),
-
-                      /// Mini progress bar with two colors
-                      Row(
-                        children: [
-                          SizedBox(width: 10.w),
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                /// background remaining
-                                Container(
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white24,
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
-                                ),
-
-                                /// completed portion
-                                FractionallySizedBox(
-                                  widthFactor: percent,
-                                  child: Container(
-                                    height: 20.h,
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(255, 180, 39, 157),
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          ],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Operation: ${op['symbol']}",
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            "Correct: $totalCorrect / $totalQuestions",
+                            style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            "Points: $totalPoints",
+                            style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            "Percentage: ${totalPercentage.toStringAsFixed(2)}%",
+                            style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                          ),
+                          SizedBox(height: 12.h),
+          
+                          /// Mini progress bar with two colors
+                          Row(
+                            children: [
+                              SizedBox(width: 10.w),
+                              Expanded(
+                                child: Stack(
+                                  children: [
+                                    /// background remaining
+                                    Container(
+                                      height: 20.h,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white24,
+                                        borderRadius: BorderRadius.circular(10.r),
+                                      ),
+                                    ),
+          
+                                    /// completed portion
+                                    FractionallySizedBox(
+                                      widthFactor: percent,
+                                      child: Container(
+                                        height: 20.h,
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            180,
+                                            39,
+                                            157,
+                                          ),
+                                          borderRadius: BorderRadius.circular(10.r),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
         ),
       ),
     );

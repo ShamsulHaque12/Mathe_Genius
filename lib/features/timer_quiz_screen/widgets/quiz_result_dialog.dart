@@ -8,6 +8,7 @@ class QuizResultDialog extends StatelessWidget {
   final int wrong;
   final VoidCallback? onPlayAgain;
   final VoidCallback? onBack;
+  final String? level;
 
   const QuizResultDialog({
     super.key,
@@ -16,6 +17,7 @@ class QuizResultDialog extends StatelessWidget {
     required this.wrong,
     this.onPlayAgain,
     this.onBack,
+    this.level,
   });
 
   TextStyle _textStyle({
@@ -24,107 +26,106 @@ class QuizResultDialog extends StatelessWidget {
     Color? color,
   }) {
     return TextStyle(
-      fontSize: size,
-      fontWeight: weight,
-      color: color,
-      decoration: TextDecoration.none, // 🔥 underline removed
+      fontSize: size ?? 16.sp,
+      fontWeight: weight ?? FontWeight.normal,
+      color: color ?? Colors.white,
+      decoration: TextDecoration.none,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 24.w),
-        padding: EdgeInsets.all(24.r),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.r),
-          gradient: const LinearGradient(
-            colors: [Color(0xff1D2671), Color(0xffC33764)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.35),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.emoji_events, color: Colors.amber, size: 80.sp),
-
-            SizedBox(height: 8.h),
-
-            Center(
-              child: Text(
-                "Challenge Completed!",
-                textAlign: TextAlign.center,
-                style: _textStyle(
-                  size: 22.sp,
-                  weight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+      child: Material(
+        color: Colors.transparent,
+        child: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 24.w),
+            padding: EdgeInsets.all(24.r),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24.r),
+              gradient: const LinearGradient(
+                colors: [Color(0xff1D2671), Color(0xffC33764)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            ),
-
-            SizedBox(height: 20.h),
-
-            _infoRow("Your Score", score),
-            SizedBox(height: 12.h),
-            _infoRow("Correct Answers", correct),
-            SizedBox(height: 12.h),
-            _infoRow("Wrong Answers", wrong),
-
-            SizedBox(height: 28.h),
-
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onBack ?? () => Get.back(),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.white),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Text(
-                      "Back",
-                      style: _textStyle(
-                        size: 14.sp,
-                        weight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onPlayAgain,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Text(
-                      "Play Again",
-                      style: _textStyle(
-                        size: 14.sp,
-                        weight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.35),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
                 ),
               ],
             ),
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.emoji_events, color: Colors.amber, size: 80.sp),
+                SizedBox(height: 8.h),
+                Text(
+                  "Challenge Completed!",
+                  textAlign: TextAlign.center,
+                  style: _textStyle(
+                    size: 22.sp,
+                    weight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                _infoRow("Your Score", score),
+                SizedBox(height: 12.h),
+                _infoRow("Correct Answers", correct),
+                SizedBox(height: 12.h),
+                _infoRow("Wrong Answers", wrong),
+                SizedBox(height: 28.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: onBack ?? () => Get.back(),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Colors.white),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                        ),
+                        child: Text(
+                          "Back",
+                          style: _textStyle(
+                            size: 14.sp,
+                            weight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: onPlayAgain ?? () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                        ),
+                        child: Text(
+                          "Play Again",
+                          style: _textStyle(
+                            size: 14.sp,
+                            weight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

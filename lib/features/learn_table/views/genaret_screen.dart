@@ -13,108 +13,133 @@ class GenaretScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(600),
-        child: SafeArea(child: LeadingButtonAppbar()),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// 🔊 ACTION BUTTONS
-            GetBuilder<LearnTableController>(
-              builder: (c) {
-                return Row(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff6D83F2), Color(0xff9A63F7)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    _actionBtn(
-                      icon: Icons.play_arrow,
-                      text: "Play",
-                      isActive: c.activeButton == 1,
-                      onTap: () {
-                        c.setActiveButton(1);
-                        c.playVoice();
-                      },
-                    ),
+                    LeadingButtonAppbar(),
                     SizedBox(width: 10.w),
-                    _actionBtn(
-                      icon: Icons.man,
-                      text: "Man",
-                      isActive: c.activeButton == 2,
-                      onTap: () {
-                        c.isMale = true;
-                        c.setActiveButton(2);
-                      },
-                    ),
-                    SizedBox(width: 10.w),
-                    _actionBtn(
-                      icon: Icons.woman,
-                      text: "Woman",
-                      isActive: c.activeButton == 3,
-                      onTap: () {
-                        c.isMale = false;
-                        c.setActiveButton(3);
-                      },
-                    ),
-                    SizedBox(width: 10.w),
-                    _actionBtn(
-                      icon: Icons.favorite,
-                      text: "Save",
-                      isActive: c.activeButton == 4,
-                      onTap: () {
-                        c.saveTable();
-                        c.setActiveButton(4);
-                      },
+                    Text(
+                      "Generate Table",
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
-                );
-              },
-            ),
-
-            SizedBox(height: 10.h),
-            Divider(thickness: 1.w),
-            SizedBox(height: 6.h),
-
-            Center(
-              child: Text(
-                "Generated Table Results",
-                style: TextStyle(
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.green,
                 ),
-              ),
-            ),
-            SizedBox(height: 12.h),
-
-            /// 📋 TABLE RESULT
-            GetBuilder<LearnTableController>(
-              builder: (c) {
-                return Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.r),
-                    color: Colors.blueGrey.shade100,
-                  ),
-                  child: Column(
-                    children: c.tableList.map((e) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
-                        child: Text(
-                          e,
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
+                SizedBox(height: 20.h),
+                /// 🔊 ACTION BUTTONS
+                GetBuilder<LearnTableController>(
+                  builder: (c) {
+                    return Row(
+                      children: [
+                        _actionBtn(
+                          icon: Icons.play_arrow,
+                          text: "Play",
+                          isActive: c.activeButton == 1,
+                          onTap: () {
+                            c.setActiveButton(1);
+                            c.playVoice();
+                          },
                         ),
-                      );
-                    }).toList(),
+                        SizedBox(width: 10.w),
+                        _actionBtn(
+                          icon: Icons.man,
+                          text: "Man",
+                          isActive: c.activeButton == 2,
+                          onTap: () {
+                            c.isMale = true;
+                            c.setActiveButton(2);
+                          },
+                        ),
+                        SizedBox(width: 10.w),
+                        _actionBtn(
+                          icon: Icons.woman,
+                          text: "Woman",
+                          isActive: c.activeButton == 3,
+                          onTap: () {
+                            c.isMale = false;
+                            c.setActiveButton(3);
+                          },
+                        ),
+                        SizedBox(width: 10.w),
+                        _actionBtn(
+                          icon: Icons.favorite,
+                          text: "Save",
+                          isActive: c.activeButton == 4,
+                          onTap: () {
+                            c.saveTable();
+                            c.setActiveButton(4);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+
+                SizedBox(height: 10.h),
+                Divider(thickness: 1.w, color: Colors.white70),
+                SizedBox(height: 6.h),
+
+                Center(
+                  child: Text(
+                    "Generated Table Results",
+                    style: TextStyle(
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
-                );
-              },
+                ),
+                SizedBox(height: 12.h),
+
+                /// 📋 TABLE RESULT
+                GetBuilder<LearnTableController>(
+                  builder: (c) {
+                    return Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.r),
+                        color: Colors.white.withOpacity(0.2),
+                      ),
+                      child: Column(
+                        children: c.tableList.map((e) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 4.h),
+                            child: Text(
+                              e,
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -133,18 +158,18 @@ class GenaretScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
-          color: isActive ? Colors.blueAccent : Colors.transparent,
-          border: Border.all(color: Colors.black),
+          color: isActive ? Colors.blueAccent : Colors.white.withOpacity(0.2),
+          border: Border.all(color: Colors.white),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 18, color: isActive ? Colors.white : Colors.black),
+            Icon(icon, size: 18, color: isActive ? Colors.white : Colors.white),
             SizedBox(width: 4.w),
             Text(
               text,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: isActive ? Colors.white : Colors.black,
+                color: isActive ? Colors.white : Colors.white,
               ),
             ),
           ],

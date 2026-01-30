@@ -138,20 +138,20 @@ class TimedQuizController extends GetxController {
 
     Get.dialog(
       QuizResultDialog(
+        level: "Timed",
         score: score.value,
         correct: correctCount.value,
         wrong: wrongCount.value,
         onPlayAgain: () {
-          Get.back(); 
+          Get.back();
           generateQuestions();
           startTimer();
         },
         onBack: () {
           Get.back();
-          Get.back(); 
+          Get.back();
         },
       ),
-      barrierDismissible: false,
     );
   }
 

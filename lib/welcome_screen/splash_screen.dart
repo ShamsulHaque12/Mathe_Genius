@@ -16,7 +16,20 @@ class SplashScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      body: Center(child: Lottie.asset('assets/lottie/littlegirl.json')),
+      body: Container(
+         width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff6D83F2),
+              Color(0xff9A63F7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(child: Lottie.asset('assets/lottie/littlegirl.json'))),
     );
   }
 }

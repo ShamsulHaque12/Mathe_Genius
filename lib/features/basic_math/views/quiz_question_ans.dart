@@ -67,128 +67,141 @@ class _QuizQuestionAnsState extends State<QuizQuestionAns> {
         return true;
       },
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60.h),
-          child: SafeArea(
-            child: LeadingButtonAppbar(text: "Quiz: ${widget.operation}"),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff6D83F2),
+              Color(0xff9A63F7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-        body: Obx(() {
-          if (controller.currentQuestionIndex.value >=
-              controller.totalQuestions) {
-            Future.delayed(Duration.zero, () => _showResultPopup(context));
-            return SizedBox.shrink();
-          }
-
-          final question =
-              controller.questions[controller.currentQuestionIndex.value];
-
-          return Padding(
-            padding: EdgeInsets.all(16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: 20.h),
-                Text(
-                  "Question ${controller.currentQuestionIndex.value + 1} / ${controller.totalQuestions}",
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-
-                Card(
-                  elevation: 4,
-                  color: Colors.blue.shade50,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(16.w),
-                    child: Text(
-                      question['question'],
-                      textAlign: TextAlign.center,
+          child: SafeArea(
+            child: Obx(() {
+              if (controller.currentQuestionIndex.value >=
+                  controller.totalQuestions) {
+                Future.delayed(Duration.zero, () => _showResultPopup(context));
+                return SizedBox.shrink();
+              }
+            
+              final question =
+                  controller.questions[controller.currentQuestionIndex.value];
+            
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    LeadingButtonAppbar(text: "Quiz: ${widget.operation}"),
+                    SizedBox(height: 20.h),
+                    Text(
+                      "Question ${controller.currentQuestionIndex.value + 1} / ${controller.totalQuestions}",
                       style: TextStyle(
-                        fontSize: 28.sp,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ),
-
-                SizedBox(height: 30.h),
-
-                ...question['options'].map<Widget>((opt) {
-                  bool isSelected = controller.selectedAnswer.value == opt;
-                  bool isCorrectAnswer = opt == question['answer'];
-                  Color color = Colors.white;
-
-                  if (controller.showFeedback.value) {
-                    if (isSelected && controller.isCorrect.value) {
-                      color = Colors.green;
-                    } else if (isSelected && !controller.isCorrect.value) {
-                      color = Colors.red;
-                    } else if (!isSelected &&
-                        !controller.isCorrect.value &&
-                        isCorrectAnswer) {
-                      color = Colors.green.withOpacity(0.6);
-                    }
-                  }
-
-                  return GestureDetector(
-                    onTap: controller.showFeedback.value
-                        ? null
-                        : () {
-                            controller.selectAnswer(opt);
-                            // ❌ playSound call removed
-                          },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 8.h),
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(
-                          color: Colors.blueAccent,
-                          width: 1.5,
-                        ),
+                    SizedBox(height: 20.h),
+            
+                    Card(
+                      elevation: 4,
+                      color: Colors.blue.shade50,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
-                      child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.w),
                         child: Text(
-                          opt,
+                          question['question'],
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 20.sp,
+                            fontSize: 28.sp,
                             fontWeight: FontWeight.bold,
-                            color: color.computeLuminance() > 0.5
-                                ? Colors.black87
-                                : Colors.white,
                           ),
                         ),
                       ),
                     ),
-                  );
-                }).toList(),
-
-                Spacer(),
-
-                if (controller.showFeedback.value)
-                  CustomButtonGradient(
-                    height: 40.h,
-                    text: (controller.isLastQuestion ? "Finish" : "Next"),
-                    onPressed: () {
-                      if (controller.isLastQuestion) {
-                        _showResultPopup(context);
-                      } else {
-                        controller.nextQuestion();
+            
+                    SizedBox(height: 30.h),
+            
+                    ...question['options'].map<Widget>((opt) {
+                      bool isSelected = controller.selectedAnswer.value == opt;
+                      bool isCorrectAnswer = opt == question['answer'];
+                      Color color = Colors.white;
+            
+                      if (controller.showFeedback.value) {
+                        if (isSelected && controller.isCorrect.value) {
+                          color = Colors.green;
+                        } else if (isSelected && !controller.isCorrect.value) {
+                          color = Colors.red;
+                        } else if (!isSelected &&
+                            !controller.isCorrect.value &&
+                            isCorrectAnswer) {
+                          color = Colors.green.withOpacity(0.6);
+                        }
                       }
-                    },
-                    backgroundColor: Colors.blueAccent,
-                  ),
-              ],
-            ),
-          );
-        }),
+            
+                      return GestureDetector(
+                        onTap: controller.showFeedback.value
+                            ? null
+                            : () {
+                                controller.selectAnswer(opt);
+                                // ❌ playSound call removed
+                              },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(vertical: 8.h),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: Colors.blueAccent,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              opt,
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                                color: color.computeLuminance() > 0.5
+                                    ? Colors.black87
+                                    : Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+            
+                    Spacer(),
+            
+                    if (controller.showFeedback.value)
+                      CustomButtonGradient(
+                        height: 40.h,
+                        text: (controller.isLastQuestion ? "Finish" : "Next"),
+                        onPressed: () {
+                          if (controller.isLastQuestion) {
+                            _showResultPopup(context);
+                          } else {
+                            controller.nextQuestion();
+                          }
+                        },
+                        backgroundColor: Colors.blueAccent,
+                      ),
+
+                    SizedBox(height: 20.h),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }
