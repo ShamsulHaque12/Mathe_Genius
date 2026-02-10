@@ -44,6 +44,7 @@ class GenaretScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 20.h),
+
                 /// 🔊 ACTION BUTTONS
                 GetBuilder<LearnTableController>(
                   builder: (c) {
@@ -68,21 +69,21 @@ class GenaretScreen extends StatelessWidget {
                             c.setActiveButton(2);
                           },
                         ),
-                        SizedBox(width: 10.w),
-                        _actionBtn(
-                          icon: Icons.woman,
-                          text: "Woman",
-                          isActive: c.activeButton == 3,
-                          onTap: () {
-                            c.isMale = false;
-                            c.setActiveButton(3);
-                          },
-                        ),
+                        // SizedBox(width: 10.w),
+                        // _actionBtn(
+                        //   icon: Icons.woman,
+                        //   text: "Woman",
+                        //   isActive: c.activeButton == 3,
+                        //   onTap: () {
+                        //     c.isMale = false;
+                        //     c.setActiveButton(3);
+                        //   },
+                        // ),
                         SizedBox(width: 10.w),
                         _actionBtn(
                           icon: Icons.favorite,
                           text: "Save",
-                          isActive: c.activeButton == 4,
+                          isActive: c.activeButton == 3,
                           onTap: () {
                             c.saveTable();
                             c.setActiveButton(4);
@@ -108,32 +109,53 @@ class GenaretScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12.h),
-
-                /// 📋 TABLE RESULT
+              
+                /// 📋 TABLE RESULT (Separated Containers)
                 GetBuilder<LearnTableController>(
                   builder: (c) {
-                    return Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(10.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.r),
-                        color: Colors.white.withOpacity(0.2),
-                      ),
-                      child: Column(
-                        children: c.tableList.map((e) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 4.h),
-                            child: Text(
-                              e,
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
+                    return Column(
+                      children: c.tableList.map((e) {
+                        return Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.only(
+                            bottom: 10.h,
+                          ), // Proti line er por gap
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15.w,
+                            vertical: 12.h,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                            color: Colors.white.withOpacity(
+                              0.15,
+                            ), // Shlow white glass effect
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                            ), // Subtle border
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
                               ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                e,
+                                style: TextStyle(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
                     );
                   },
                 ),

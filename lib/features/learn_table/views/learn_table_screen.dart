@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_button_gradient.dart';
 import 'package:mathe_genius/core/custom_widgets/custom_text_field.dart';
@@ -46,6 +47,7 @@ class LearnTableScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 10.h),
+
                 /// APPBAR TITLE
                 Center(
                   child: Text(
@@ -87,7 +89,8 @@ class LearnTableScreen extends StatelessWidget {
                       onTap: () {
                         int value = int.parse(controller.numberController.text);
                         if (value > 0) {
-                          controller.numberController.text = (value - 1).toString();
+                          controller.numberController.text = (value - 1)
+                              .toString();
                         }
                       },
                     ),
@@ -105,7 +108,8 @@ class LearnTableScreen extends StatelessWidget {
                       icon: "+",
                       onTap: () {
                         int value = int.parse(controller.numberController.text);
-                        controller.numberController.text = (value + 1).toString();
+                        controller.numberController.text = (value + 1)
+                            .toString();
                       },
                     ),
                   ],
@@ -128,16 +132,20 @@ class LearnTableScreen extends StatelessWidget {
                     _numberButton(
                       icon: "-",
                       onTap: () {
-                        int value = int.parse(controller.multiplicationController.text);
+                        int value = int.parse(
+                          controller.multiplicationController.text,
+                        );
                         if (value > 0) {
-                          controller.multiplicationController.text = (value - 1).toString();
+                          controller.multiplicationController.text = (value - 1)
+                              .toString();
                         }
                       },
                     ),
                     SizedBox(width: 10.w),
                     CustomTextField(
                       width: 200.w,
-                      textEditingController: controller.multiplicationController,
+                      textEditingController:
+                          controller.multiplicationController,
                       hintText: "Number",
                       keyboardType: TextInputType.number,
                       textColor: Colors.white,
@@ -147,8 +155,11 @@ class LearnTableScreen extends StatelessWidget {
                     _numberButton(
                       icon: "+",
                       onTap: () {
-                        int value = int.parse(controller.multiplicationController.text);
-                        controller.multiplicationController.text = (value + 1).toString();
+                        int value = int.parse(
+                          controller.multiplicationController.text,
+                        );
+                        controller.multiplicationController.text = (value + 1)
+                            .toString();
                       },
                     ),
                   ],
@@ -157,15 +168,19 @@ class LearnTableScreen extends StatelessWidget {
                 SizedBox(height: 30.h),
 
                 /// GENERATE BUTTON
-                CustomButtonGradient(
-                  text: "Generate Table 🤩",
-                  onPressed: () {
-                    controller.generatedTable();
-                    Get.to(() => GenaretScreen());
-                  },
-                  backgroundColor: Colors.amber,
-                  borderRadius: 12.r,
-                ),
+                Obx(() {
+                  return controller.isLoading.value
+                      ? Center(child: SpinKitCircle(color: Colors.amberAccent,size: 50.sp,))
+                      : CustomButtonGradient(
+                          text: "Generate Table 🤩",
+                          onPressed: () {
+                            controller.generatedTable();
+                            Get.to(() => GenaretScreen());
+                          },
+                          backgroundColor: Colors.amber,
+                          borderRadius: 12.r,
+                        );
+                }),
               ],
             ),
           ),
@@ -192,7 +207,11 @@ class LearnTableScreen extends StatelessWidget {
         child: Center(
           child: Text(
             icon,
-            style: TextStyle(fontSize: 30.sp, color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 30.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
