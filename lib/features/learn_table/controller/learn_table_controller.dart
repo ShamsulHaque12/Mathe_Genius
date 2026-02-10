@@ -10,6 +10,7 @@ class LearnTableController extends GetxController {
   List<String> tableList = [];
   bool isMale = true;  // Man/Woman
   final FlutterTts tts = FlutterTts();
+  final isLoading = false.obs;
 
   int activeButton = 0; // 0: none, 1: Play, 2: Man, 3: Woman, 4: Save
 
@@ -35,8 +36,14 @@ class LearnTableController extends GetxController {
     });
 
     for (String line in tableList) {
-      await tts.speak(line);
-      await Future.delayed(const Duration(milliseconds: 800));
+      // "*" ke "into" ebong "=" ke "equals" diye replace kora hochche
+      // Jate voice clear shona jay
+      String speechText = line.replaceAll("*", "multiplied by").replaceAll("=", "is");
+      
+      await tts.speak(speechText);
+      
+      // Protiti line er por ektu jothesto gap rakha jate ekter opor arekta na bole
+      await Future.delayed(const Duration(seconds: 2)); 
     }
   }
 

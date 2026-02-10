@@ -16,7 +16,7 @@ class SettingScreenView extends StatelessWidget {
 
   final List<Map<String, dynamic>> voices = [
     {"name": "Men", "icon": Icons.person},
-    {"name": "Women", "icon": Icons.person_4},
+    
   ];
 
   @override
