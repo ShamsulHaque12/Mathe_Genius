@@ -4,14 +4,39 @@ An mathematics learning application built with Flutter that helps users master m
 
 ## 🎯 Features
 
+- **Home Screen** - Home screen
+- 
+  <img width="300" height="1000" alt="Screenshot_1770696244" src="https://github.com/user-attachments/assets/e8321d00-db75-4b08-be56-4291399214f2" />
+
 - **Quiz Mode** - Test your math skills with customizable quizzes
+- 
+  <img width="300" height="1000" alt="Screenshot_1770696257" src="https://github.com/user-attachments/assets/cf6e1644-22af-4db2-a011-3f58a9904f90" />
+
 - **Timer Quiz** - Challenge yourself with time-limited quizzes
 - **Table Battle** - Competitive mode to master multiplication tables
+ 
 - **Daily Challenges** - Fresh math challenges every day
+- 
+  <img width="300" height="1000" alt="Screenshot_1770696271" src="https://github.com/user-attachments/assets/83dc1741-6cf1-4cf0-be2f-2095938ffd78" />
+
 - **Learn Tables** - Structured lessons for learning multiplication tables
+- 
+   <img width="300" height="1000" alt="Screenshot_1770696262" src="https://github.com/user-attachments/assets/cda5861a-aada-41d8-b3e3-d1b1cc459435" />
+   <img width="300" height="1000" alt="Screenshot_1770696311" src="https://github.com/user-attachments/assets/e942d8ec-5f23-44c4-a3f1-cbcc015519a1" />
+
+   
 - **Progress Tracking** - Monitor your learning progress over time
+- 
+   <img width="300" height="1000" alt="Screenshot_1770696252" src="https://github.com/user-attachments/assets/f235c280-cd8b-4ef0-8b59-214078b45ad4" />
+
 - **Favorites** - Save and practice your favorite problems
+- 
+  <img width="300" height="1000" alt="Screenshot_1770696279" src="https://github.com/user-attachments/assets/78ab7e06-6093-4cf2-b6b5-5d01aa641dac" />
+
 - **Settings** - Customize app experience and preferences
+- 
+  <img width="300" height="1000" alt="Screenshot_1770696284" src="https://github.com/user-attachments/assets/ce6ab495-be6c-4af6-ab29-1e4d6429b386" />
+
 - **Animations** - Engaging Lottie animations for better UX
 - **Text-to-Speech** - Audio support for better accessibility
 
