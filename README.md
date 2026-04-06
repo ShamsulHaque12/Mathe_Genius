@@ -5,37 +5,32 @@ An mathematics learning application built with Flutter that helps users master m
 ## 🎯 Features
 
 - **Home Screen** - Home screen
-- 
-  <img width="300" height="1000" alt="Screenshot_1770696244" src="https://github.com/user-attachments/assets/e8321d00-db75-4b08-be56-4291399214f2" />
+- <img width="300" height="1000" alt="Screenshot 2026-04-06 at 10 18 47 PM" src="https://github.com/user-attachments/assets/83a1380c-db2b-4d8f-bc43-23c25b56a71e" />
 
 - **Quiz Mode** - Test your math skills with customizable quizzes
-- 
-  <img width="300" height="1000" alt="Screenshot_1770696257" src="https://github.com/user-attachments/assets/cf6e1644-22af-4db2-a011-3f58a9904f90" />
+- <img width="300" height="1000" alt="Screenshot 2026-04-06 at 10 19 21 PM" src="https://github.com/user-attachments/assets/ea3bd431-5416-49b4-9839-8d98bdd41291" />
 
 - **Timer Quiz** - Challenge yourself with time-limited quizzes
 - **Table Battle** - Competitive mode to master multiplication tables
  
 - **Daily Challenges** - Fresh math challenges every day
-- 
-  <img width="300" height="1000" alt="Screenshot_1770696271" src="https://github.com/user-attachments/assets/83dc1741-6cf1-4cf0-be2f-2095938ffd78" />
+- <img width="300" height="1000" alt="Screenshot 2026-04-06 at 10 19 42 PM" src="https://github.com/user-attachments/assets/a8404cf4-2a3e-42c3-9dfe-f2c4ae5af4d9" />
 
 - **Learn Tables** - Structured lessons for learning multiplication tables
 - 
    <img width="300" height="1000" alt="Screenshot_1770696262" src="https://github.com/user-attachments/assets/cda5861a-aada-41d8-b3e3-d1b1cc459435" />
-   <img width="300" height="1000" alt="Screenshot_1770696311" src="https://github.com/user-attachments/assets/e942d8ec-5f23-44c4-a3f1-cbcc015519a1" />
+<img width="300" height="1000" alt="Screenshot 2026-04-06 at 10 20 23 PM" src="https://github.com/user-attachments/assets/00ba771a-9ff5-4878-8b69-4c2a5d2c3c45" />
 
    
 - **Progress Tracking** - Monitor your learning progress over time
-- 
-   <img width="300" height="1000" alt="Screenshot_1770696252" src="https://github.com/user-attachments/assets/f235c280-cd8b-4ef0-8b59-214078b45ad4" />
+- <img width="300" height="1000" alt="Screenshot 2026-04-06 at 10 20 47 PM" src="https://github.com/user-attachments/assets/7f1cd85a-638a-4ab7-995a-cae1a98b9c47" />
 
 - **Favorites** - Save and practice your favorite problems
 - 
-  <img width="300" height="1000" alt="Screenshot_1770696279" src="https://github.com/user-attachments/assets/78ab7e06-6093-4cf2-b6b5-5d01aa641dac" />
+<img width="300" height="1000" alt="Screenshot 2026-04-06 at 10 21 09 PM" src="https://github.com/user-attachments/assets/4282f451-64b4-4d59-87ba-ddf3730fcc86" />
 
 - **Settings** - Customize app experience and preferences
-- 
-  <img width="300" height="1000" alt="Screenshot_1770696284" src="https://github.com/user-attachments/assets/ce6ab495-be6c-4af6-ab29-1e4d6429b386" />
+- <img width="300" height="1000" alt="Screenshot 2026-04-06 at 10 21 32 PM" src="https://github.com/user-attachments/assets/38b8d93a-47d7-456f-9751-eb53cd285512" />
 
 - **Animations** - Engaging Lottie animations for better UX
 - **Text-to-Speech** - Audio support for better accessibility
@@ -121,7 +116,9 @@ flutter build apk --release
 flutter build ios --release
 ```
 ## Buid APK File
-App link: https://drive.google.com/file/d/1Ty8XhMWUv1jkh_9JB1kZcXbln-69MV-m/view?usp=sharing
+App link: https://drive.google.com/file/d/1TOBpgjO633h3Vq3a7kjp09KncKU7ypn7/view?usp=sharing  
+
+Video link: https://app.usebubbles.com/2LUVqagFqdAxJQTx9nLtQX/recording-apr-06-2026
 
 ## 📦 Dependencies
 
