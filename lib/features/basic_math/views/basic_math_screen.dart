@@ -14,19 +14,23 @@ class BasicMathScreen extends StatelessWidget {
   final List<Map<String, dynamic>> mathItems = const [
     {
       "symbol": "+",
-      "colors": [Color(0xFF4CAF50), Color(0xFF81C784)],
+      "label": "Addition",
+      "colors": [Color(0xFF42E695), Color(0xFF3BB2B8)],
     },
     {
       "symbol": "-",
-      "colors": [Color(0xFFE53935), Color(0xFFFF7043)],
+      "label": "Subtraction",
+      "colors": [Color(0xFFF02FC2), Color(0xFF6094EA)],
     },
     {
       "symbol": "×",
-      "colors": [Color(0xFF3949AB), Color(0xFF5C6BC0)],
+      "label": "Multiplication",
+      "colors": [Color(0xFF65799B), Color(0xFF5E2563)],
     },
     {
       "symbol": "÷",
-      "colors": [Color(0xFFFB8C00), Color(0xFFFFCA28)],
+      "label": "Division",
+      "colors": [Color(0xFFF7971E), Color(0xFFFFD200)],
     },
   ];
 
@@ -46,84 +50,135 @@ class BasicMathScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // APPBAR
-              LeadingButtonAppbar(text: "Basic Math"),
+              LeadingButtonAppbar(text: "Practice Math"),
 
-              SizedBox(height: 20.h),
-              Text(
-                "Choose Your Operation",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.outfit(
-                  fontSize: 28.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Select Operation",
+                      style: GoogleFonts.outfit(
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      "Pick a math operator to start your journey.",
+                      style: GoogleFonts.outfit(
+                        fontSize: 15.sp,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 30.h),
 
               Expanded(
                 child: GridView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   itemCount: mathItems.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisSpacing: 18.h,
-                    crossAxisSpacing: 18.w,
-                    childAspectRatio: 1,
+                    mainAxisSpacing: 20.h,
+                    crossAxisSpacing: 20.w,
+                    childAspectRatio: 0.9,
                   ),
                   itemBuilder: (context, index) {
                     final item = mathItems[index];
 
-                    return TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 0.85, end: 1),
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.elasticOut,
-                      builder: (context, double scale, child) {
-                        return Transform.scale(scale: scale, child: child);
-                      },
-                      child: GestureDetector(
-                        onTap: () {
-                          String op = item['symbol'];
-                          if (op == '×') op = '*';
-                          if (op == '÷') op = '/';
-
-                          if (Get.isRegistered<QuestionAnsController>()) {
-                            Get.delete<QuestionAnsController>(force: true);
-                          }
-
-                          Get.to(() => QuizQuestionAns(operation: op));
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30.r),
-                            gradient: LinearGradient(
-                              colors: List<Color>.from(item['colors']),
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 12,
-                                offset: const Offset(0, 6),
-                                color: Colors.black26,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              item['symbol'],
-                              style: GoogleFonts.outfit(
-                                fontSize: 55.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
+                    return _buildMathTile(item, index);
                   },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMathTile(Map<String, dynamic> item, int index) {
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 500 + (index * 100)),
+      curve: Curves.easeOutBack,
+      builder: (context, double value, child) {
+        return Transform.scale(
+          scale: 0.8 + (0.2 * value),
+          child: Opacity(
+            opacity: value.clamp(0.0, 1.0),
+            child: child,
+          ),
+        );
+      },
+      child: GestureDetector(
+        onTap: () {
+          String op = item['symbol'];
+
+          if (Get.isRegistered<QuestionAnsController>()) {
+            Get.delete<QuestionAnsController>(force: true);
+          }
+
+          Get.to(() => QuizQuestionAns(operation: op));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(32.r),
+            gradient: LinearGradient(
+              colors: List<Color>.from(item['colors']),
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: (item['colors'] as List<Color>).last.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              /// Glass overlay
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(32.r),
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                ),
+              ),
+
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      item['symbol'],
+                      style: GoogleFonts.outfit(
+                        fontSize: 60.sp,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 5.h),
+                    Text(
+                      item['label'],
+                      style: GoogleFonts.outfit(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white.withOpacity(0.9),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

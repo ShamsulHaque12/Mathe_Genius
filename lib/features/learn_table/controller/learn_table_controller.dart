@@ -8,14 +8,18 @@ class LearnTableController extends GetxController {
   final multiplicationController = TextEditingController(text: "0");
 
   List<String> tableList = [];
-  bool isMale = true;  // Man/Woman
+  bool isMale = true; // Man/Woman
   final FlutterTts tts = FlutterTts();
   final isLoading = false.obs;
+  final isSpeaking = false.obs;
+  final isSaved = false.obs;
 
   int activeButton = 0; // 0: none, 1: Play, 2: Man, 3: Woman, 4: Save
 
   /// generate table
   void generatedTable() {
+    stopVoice();
+    isSaved.value = false;
     int first = int.tryParse(numberController.text) ?? 0;
     int till = int.tryParse(multiplicationController.text) ?? 0;
     tableList.clear();
@@ -27,6 +31,9 @@ class LearnTableController extends GetxController {
 
   /// play voice
   Future<void> playVoice() async {
+    isSpeaking.value = true;
+    update();
+
     await tts.setLanguage("en-US");
     await tts.setSpeechRate(0.45);
 
@@ -36,21 +43,30 @@ class LearnTableController extends GetxController {
     });
 
     for (String line in tableList) {
-      // "*" ke "into" ebong "=" ke "equals" diye replace kora hochche
-      // Jate voice clear shona jay
+      if (!isSpeaking.value) break;
+
       String speechText = line.replaceAll("*", "multiplied by").replaceAll("=", "is");
-      
       await tts.speak(speechText);
-      
-      // Protiti line er por ektu jothesto gap rakha jate ekter opor arekta na bole
-      await Future.delayed(const Duration(seconds: 2)); 
+      await Future.delayed(const Duration(seconds: 2));
     }
+
+    isSpeaking.value = false;
+    update();
+  }
+
+  /// stop voice
+  Future<void> stopVoice() async {
+    await tts.stop();
+    isSpeaking.value = false;
+    update();
   }
 
   /// save table
   void saveTable() {
+    if (isSaved.value) return;
     final box = Hive.box('tables');
     box.add(tableList);
+    isSaved.value = true;
     update();
   }
 
@@ -61,6 +77,7 @@ class LearnTableController extends GetxController {
 
   @override
   void onClose() {
+    tts.stop();
     numberController.dispose();
     multiplicationController.dispose();
     super.onClose();

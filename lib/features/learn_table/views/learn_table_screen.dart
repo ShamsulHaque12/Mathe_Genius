@@ -169,17 +169,23 @@ class LearnTableScreen extends StatelessWidget {
 
                 /// GENERATE BUTTON
                 Obx(() {
-                  return controller.isLoading.value
-                      ? Center(child: SpinKitCircle(color: Colors.amberAccent,size: 50.sp,))
-                      : CustomButtonGradient(
-                          text: "Generate Table 🤩",
-                          onPressed: () {
-                            controller.generatedTable();
-                            Get.to(() => GenaretScreen());
-                          },
-                          backgroundColor: Colors.amber,
-                          borderRadius: 12.r,
-                        );
+                  bool loading = controller.isLoading.value;
+                  return CustomButtonGradient(
+                    text: loading ? "" : "Generate Table 🤩",
+                    onPressed: () async {
+                      if (loading) return;
+                      controller.isLoading.value = true;
+                      controller.generatedTable();
+                      await Future.delayed(const Duration(milliseconds: 1500));
+                      controller.isLoading.value = false;
+                      Get.to(() => GenaretScreen());
+                    },
+                    backgroundColor: Colors.amber,
+                    borderRadius: 12.r,
+                    child: loading
+                        ? SpinKitCircle(color: Colors.white, size: 30.sp)
+                        : null,
+                  );
                 }),
               ],
             ),

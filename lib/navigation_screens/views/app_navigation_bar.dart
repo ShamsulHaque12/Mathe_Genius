@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mathe_genius/features/favourite_screens/views/favourite_screens_view.dart';
 import 'package:mathe_genius/features/home_screens/views/home_screens_view.dart';
@@ -21,25 +19,21 @@ class AppNavigationBar extends StatelessWidget {
       SettingScreenView(),
     ];
 
-    return SafeArea(
-      top: false,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xff6D83F2), Color(0xff9A63F7)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xff6D83F2), Color(0xff9A63F7)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Obx(() => screens[controller.isselectedIndex.value]),
-        ),
+        extendBody: true,
+        body: Obx(() => screens[controller.selectedIndex.value]),
         bottomNavigationBar: Container(
           height: 60.h,
-          margin: EdgeInsets.only(bottom: 16.h, left: 12.w, right: 12.w),
+          margin: EdgeInsets.only(bottom: 24.h, left: 12.w, right: 12.w),
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
@@ -71,15 +65,16 @@ class AppNavigationBar extends StatelessWidget {
 
   Widget bottomNavItem(IconData icon, String title, int index) {
     return Obx(() {
-      bool isSelected = controller.isselectedIndex.value == index;
+      bool isSelected = controller.selectedIndex.value == index;
 
       return GestureDetector(
-        onTap: () => controller.isselectedIndex.value = index,
+        onTap: () => controller.selectedIndex.value = index,
         child: AnimatedContainer(
           duration: Duration(milliseconds: 250),
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.white.withOpacity(0.3) : Colors.transparent,
+            color:
+                isSelected ? Colors.white.withOpacity(0.3) : Colors.transparent,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Row(

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mathe_genius/core/custom_widgets/leading_button_appbar.dart';
-import 'package:mathe_genius/features/daily_challenge_screens/screems/daily_challenge_mode.dart';
+import 'package:mathe_genius/features/daily_challenge_screens/screens/daily_challenge_mode.dart';
 import 'package:mathe_genius/features/levels_quiz_screen/screens/levels_quiz_screen.dart';
 import 'package:mathe_genius/features/quiz_mode/controller/quiz_mode_controller.dart';
 import 'package:mathe_genius/features/timer_quiz_screen/screen/timed_quiz_screen.dart';
@@ -15,7 +16,7 @@ class QuizModeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Gradient background
+      backgroundColor: Colors.transparent,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -28,45 +29,75 @@ class QuizModeScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // APPBAR
-                LeadingButtonAppbar(text: "Quiz Mode"),
+                LeadingButtonAppbar(text: "Quiz Center"),
 
-                SizedBox(height: 20.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Challenge Yourself",
+                        style: GoogleFonts.outfit(
+                          fontSize: 28.sp,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "Test your skills and unlock new levels.",
+                        style: GoogleFonts.outfit(
+                          fontSize: 15.sp,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
                 Obx(
                   () => Column(
                     children: [
                       // ======= Daily Challenge =======
                       _QuizModeCard(
-                        title: 'Daily\nChallenge',
-                        icon: Icons.calendar_today,
-                        color: Colors.orange,
+                        title: 'Daily Challenge',
+                        subtitle: 'Test your daily math skills',
+                        icon: Icons.calendar_today_rounded,
+                        cardColor: Colors.orangeAccent,
                         onTap: () => Get.to(() => DailyChallengeMode()),
+                        delay: 100,
                       ),
                       SizedBox(height: 16.h),
 
                       // ======= Speed Round =======
                       _QuizModeCard(
-                        title: 'Speed\nRound',
-                        icon: Icons.timer,
-                        color: Colors.redAccent,
+                        title: 'Speed Round',
+                        subtitle: 'Beat the clock to win',
+                        icon: Icons.timer_rounded,
+                        cardColor: Colors.redAccent,
                         isLocked: !controller.speedUnlocked.value,
                         onTap: () => Get.to(() => TimedQuizScreen()),
+                        delay: 200,
                       ),
                       SizedBox(height: 16.h),
 
                       // ======= Levels Quiz =======
                       _QuizModeCard(
-                        title: 'Levels\nQuiz',
-                        icon: Icons.bar_chart,
-                        color: Colors.blue,
+                        title: 'Levels Quiz',
+                        subtitle: 'Climb the math ladder',
+                        icon: Icons.bar_chart_rounded,
+                        cardColor: Colors.blueAccent,
                         isLocked: !controller.levelsUnlocked.value,
                         onTap: () => Get.to(() => LevelsQuizScreen()),
+                        delay: 300,
                       ),
-                      SizedBox(height: 16.h),
                     ],
                   ),
                 ),
@@ -79,150 +110,129 @@ class QuizModeScreen extends StatelessWidget {
   }
 }
 
-
 /// ===============================
-/// QUIZ MODE CARD WIDGET
+/// QUIZ MODE CARD WIDGET (Refined)
 /// ===============================
 class _QuizModeCard extends StatelessWidget {
   final String title;
+  final String subtitle;
   final IconData icon;
-  final Color color;
+  final Color cardColor;
   final bool isLocked;
   final VoidCallback? onTap;
+  final int delay;
 
   const _QuizModeCard({
     required this.title,
+    required this.subtitle,
     required this.icon,
-    required this.color,
+    required this.cardColor,
     this.isLocked = false,
     this.onTap,
+    required this.delay,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-       height: 100.h,
-      width: double.infinity,
-      child: Stack(
-        children: [
-          // ======= MAIN CARD =======
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(24.r),
-              onTap: isLocked ? null : onTap,
-              child: Ink(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24.r),
-                  gradient: LinearGradient(
-                    colors: [
-                      color.withOpacity(0.95),
-                      color.withOpacity(0.75),
-                      color.withOpacity(0.55),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: color.withOpacity(0.25),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(18.r),
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 500 + delay),
+      curve: Curves.easeOutCirc,
+      builder: (context, double value, child) {
+        return Opacity(
+          opacity: value.clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - value)),
+            child: child,
+          ),
+        );
+      },
+      child: GestureDetector(
+        onTap: isLocked ? null : onTap,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24.r),
+            color: isLocked ? Colors.black26 : cardColor.withOpacity(0.15),
+            border: Border.all(
+              color: isLocked ? Colors.white12 : cardColor.withOpacity(0.3),
+              width: 1.5,
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24.r),
+            child: Stack(
+              children: [
+                /// 🧊 Content
+                Padding(
+                  padding: EdgeInsets.all(20.w),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // ICON with glow effect
+                      /// 🖼 ICON BOX
                       Container(
-                        padding: EdgeInsets.all(12.r),
+                        height: 60.h,
+                        width: 60.w,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white.withOpacity(0.3),
-                              blurRadius: 8,
-                              spreadRadius: 1,
-                            ),
-                          ],
+                          color: isLocked ? Colors.white10 : cardColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
-                        child: Icon(icon, size: 32.sp, color: Colors.white),
+                        child: Icon(
+                          icon,
+                          size: 30.sp,
+                          color: isLocked ? Colors.white24 : Colors.white,
+                        ),
                       ),
+
                       SizedBox(width: 16.w),
-                      // TITLE & SUBTITLE
+
+                      /// 📝 TEXT INFO
                       Expanded(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               title,
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                height: 1.2,
+                                color: isLocked ? Colors.white38 : Colors.white,
+                                height: 1.1,
                               ),
                             ),
                             SizedBox(height: 4.h),
                             Text(
-                              isLocked ? "Locked" : "Play Now",
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: Colors.black,
+                              isLocked ? "Locked - Score 50+" : subtitle,
+                              style: GoogleFonts.outfit(
+                                fontSize: 13.sp,
+                                color: isLocked ? Colors.white24 : Colors.white70,
                               ),
                             ),
                           ],
                         ),
                       ),
+
+                      /// 🔒 LOCK/ARROW
+                      Icon(
+                        isLocked ? Icons.lock_outline_rounded : Icons.chevron_right_rounded,
+                        color: isLocked ? Colors.white24 : Colors.white70,
+                        size: 24.sp,
+                      ),
                     ],
                   ),
                 ),
-              ),
+
+                /// Locked overlay for visual contrast
+                if (isLocked)
+                  Positioned.fill(
+                    child: Container(
+                      color: Colors.black12,
+                    ),
+                  ),
+              ],
             ),
           ),
-
-          // ======= LOCK OVERLAY =======
-          if (isLocked)
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24.r),
-                color: Colors.black.withOpacity(0.45),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(10.r),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.lock_outline,
-                        size: 34.sp,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      "Score 50+ to Unlock",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
+        ),
       ),
     );
   }

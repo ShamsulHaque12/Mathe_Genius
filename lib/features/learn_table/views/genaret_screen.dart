@@ -50,44 +50,34 @@ class GenaretScreen extends StatelessWidget {
                   builder: (c) {
                     return Row(
                       children: [
+                        // Play/Pause button
                         _actionBtn(
-                          icon: Icons.play_arrow,
-                          text: "Play",
-                          isActive: c.activeButton == 1,
+                          icon: c.isSpeaking.value
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                          text: c.isSpeaking.value ? "Pause" : "Play",
+                          isActive: c.isSpeaking.value,
                           onTap: () {
-                            c.setActiveButton(1);
-                            c.playVoice();
+                            if (c.isSpeaking.value) {
+                              c.stopVoice();
+                            } else {
+                              c.playVoice();
+                            }
                           },
                         ),
                         SizedBox(width: 10.w),
-                        _actionBtn(
-                          icon: Icons.man,
-                          text: "Man",
-                          isActive: c.activeButton == 2,
-                          onTap: () {
-                            c.isMale = true;
-                            c.setActiveButton(2);
-                          },
-                        ),
-                        // SizedBox(width: 10.w),
-                        // _actionBtn(
-                        //   icon: Icons.woman,
-                        //   text: "Woman",
-                        //   isActive: c.activeButton == 3,
-                        //   onTap: () {
-                        //     c.isMale = false;
-                        //     c.setActiveButton(3);
-                        //   },
-                        // ),
-                        SizedBox(width: 10.w),
+
+                        // Save button
                         _actionBtn(
                           icon: Icons.favorite,
-                          text: "Save",
-                          isActive: c.activeButton == 3,
-                          onTap: () {
-                            c.saveTable();
-                            c.setActiveButton(4);
-                          },
+                          text: c.isSaved.value ? "Saved" : "Save",
+                          isActive: c.isSaved.value,
+                          activeColor: Colors.green,
+                          onTap: c.isSaved.value
+                              ? () {} // disabled
+                              : () {
+                                  c.saveTable();
+                                },
                         ),
                       ],
                     );
@@ -109,7 +99,7 @@ class GenaretScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12.h),
-              
+
                 /// 📋 TABLE RESULT (Separated Containers)
                 GetBuilder<LearnTableController>(
                   builder: (c) {
@@ -173,6 +163,7 @@ class GenaretScreen extends StatelessWidget {
     required String text,
     required VoidCallback onTap,
     bool isActive = false,
+    Color activeColor = Colors.blueAccent,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -180,18 +171,18 @@ class GenaretScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
-          color: isActive ? Colors.blueAccent : Colors.white.withOpacity(0.2),
+          color: isActive ? activeColor : Colors.white.withOpacity(0.2),
           border: Border.all(color: Colors.white),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 18, color: isActive ? Colors.white : Colors.white),
+            Icon(icon, size: 18, color: Colors.white),
             SizedBox(width: 4.w),
             Text(
               text,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: isActive ? Colors.white : Colors.white,
+                color: Colors.white,
               ),
             ),
           ],
